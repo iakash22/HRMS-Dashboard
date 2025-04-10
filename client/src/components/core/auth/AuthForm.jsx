@@ -22,6 +22,7 @@ const AuthForm = ({ }) => {
     const onSubmit = async (data) => {
         if (pathname === "/register") {
             console.log("Registering user:", data);
+            data.confirmPassword = undefined;
             await disptach(Services.AuthOperation.register(data, navigate));
         } else {
             console.log("Logging in user:", data);

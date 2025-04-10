@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../../components/layouts/AppLayout';
 import DynamicTable from '../../components/common/DynamicTable';
 import './style.css'
 import CustomDropdown from '../../components/common/CustomDropDown';
 import { MdSearch } from 'react-icons/md';
 import CustomDialogBox from '../../components/common/CustomDialogBox';
+import Services from '../../services/operations';
+import { candidateEndPoints } from '../../services/api';
+import { useSelector } from 'react-redux';
 
 const candidateData = [
     {
@@ -101,12 +104,12 @@ const candidateData = [
 
 const candidateColumns = [
     { key: 'SrNo', label: 'Sr no.' },
-    { key: 'CandidatesName', label: 'Candidates Name' },
-    { key: 'Email', label: 'Email Address' },
-    { key: 'Phone', label: 'Phone Number' },
-    { key: 'Position', label: 'Position' },
+    { key: 'fullName', label: 'Candidates Name' },
+    { key: 'email', label: 'Email Address' },
+    { key: 'phone', label: 'Phone Number' },
+    { key: 'position', label: 'Position' },
     { key: 'Status', label: 'Status' },
-    { key: 'Experience', label: 'Experience' },
+    { key: 'experience', label: 'Experience' },
     { key: 'Action', label: 'Action' },
 ];
 
@@ -115,6 +118,13 @@ const positionFilterToolbar = ["Position", "Designer", "Developer", "Human Resou
 
 const Candidates = () => {
     const [open, setOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const { accessToken } = useSelector(state => state.auth);
+
+    
     const handleDownloadResume = (candidate) => {
         console.log('Download resume for:', candidate);
     };
@@ -122,6 +132,36 @@ const Candidates = () => {
     const handleDeleteCandidate = (candidate) => {
         console.log('Delete candidate:', candidate);
     };
+
+    const fetchCandidate = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        const query = { page, pageSize: 10 };
+
+        try {
+            const response = await Services.getAndSearchOpeartion(candidateEndPoints.GET_AND_SEARCH_CANDIDATE_API, query, accessToken, setLoading);
+
+            const newCandidates = response?.users || [];
+            const totalPages = response?.totalPages || 1;
+
+            setData(prev => [...prev, ...newCandidates]);
+            setPage(prev => prev + 1);
+
+            // If you've reached the last page, stop further requests
+            if (page >= totalPages || newCandidates.length === 0) {
+                setHasMore(false);
+            }
+        } catch (error) {
+            console.error("Error fetching candidates:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCandidate();
+    }, [])
 
     const openDialog = () => setOpen(true);
     const closeDialog = () => setOpen(false);
@@ -143,10 +183,13 @@ const Candidates = () => {
                 </div>
             </div>
             <DynamicTable
-                data={candidateData}
+                data={data}
                 columns={candidateColumns}
                 onDownloadResume={handleDownloadResume}
                 onDeleteCandidate={handleDeleteCandidate}
+                onScrollEnd={fetchCandidate}
+                loading={loading}
+                hasMore={hasMore}
             />
 
             {open && <CustomDialogBox

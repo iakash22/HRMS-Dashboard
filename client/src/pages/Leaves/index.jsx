@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppLayout from '../../components/layouts/AppLayout'
 import './style.css';
 import CustomDropdown from '../../components/common/CustomDropDown';
 import { MdSearch } from 'react-icons/md';
 import DynamicTable from '../../components/common/DynamicTable';
 import LeaveSection from '../../components/core/Leave/LeaveSection';
+import Services from '../../services/operations';
+import { leaveEndPoints } from '../../services/api';
+import { useSelector } from 'react-redux';
 
 const leaveTableColumns = [
     { key: 'profile', label: 'Profile' },
-    { key: 'name', label: 'Name' },
+    { key: 'fullName', label: 'Name' },
     { key: 'date', label: 'Date' },
     { key: 'reason', label: 'Reason' },
     { key: 'Status', label: 'Status' },
@@ -23,7 +26,7 @@ const dummyLeaves = [
         reason: "hbkdm",
         date: '2024-09-10',
         status: 'Approved',
-        docs : "pdf"
+        docs: "pdf"
     },
     {
         profile: '/images',
@@ -39,6 +42,42 @@ const leaveStatus = ["Pending", "Approve", "Reject"];
 
 const Leaves = () => {
     const [open, setOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const { accessToken } = useSelector(state => state.auth);
+
+    const fetchLeaves = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        const query = { page, pageSize: 10 };
+
+        try {
+            const response = await Services.getAndSearchOpeartion(leaveEndPoints.GET_AND_SEARCH_LEAVE_API, query, accessToken, setLoading);
+
+            console.log("response", response);
+            const newCandidates = response?.users || [];
+            const totalPages = response?.totalPages || 1;
+
+            setData(prev => [...prev, ...newCandidates]);
+            setPage(prev => prev + 1);
+
+            // If you've reached the last page, stop further requests
+            if (page >= totalPages || newCandidates.length === 0) {
+                setHasMore(false);
+            }
+        } catch (error) {
+            console.error("Error fetching candidates:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchLeaves();
+    }, [])
     const openDialog = () => setOpen(true);
     return (
         <>
@@ -59,8 +98,11 @@ const Leaves = () => {
             <div className="leave-page-container">
                 <div style={{ width: "70%" }}>
                     <DynamicTable
-                        data={dummyLeaves}
+                        data={data}
                         columns={leaveTableColumns}
+                        loading={loading}
+                        hasMore={hasMore}
+                        onScrollEnd={fetchLeaves}
                     />
                 </div>
 

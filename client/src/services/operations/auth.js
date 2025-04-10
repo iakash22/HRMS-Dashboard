@@ -38,10 +38,13 @@ const login = (data, navigate) => {
                     headers: { 'Content-Type': 'application/json', }
                 }
             );
-            console.log("Login response:", response);
-            const accessToken = response.data?.accessToken;
+            // console.log("Login response:", response);
+            navigate('/');
+            const accessToken = response.data?.data?.token;
             dispatch(setAccessToken(accessToken));
-            dispatch(setUser(response.data?.data));
+            dispatch(setUser(response.data?.data?.user));
+            localStorage.setItem('access-token', JSON.stringify(accessToken));
+            localStorage.setItem('user', JSON.stringify(response.data?.data?.user));
         } catch (error) {
             console.log("login error :", error);
             const errorMessage = getErrorMessage(error);
@@ -52,29 +55,30 @@ const login = (data, navigate) => {
     }
 }
 
-const logout = (data, navigate) => {
-    return async (dispatch) => {
-        dispatch(setLoading(true));
-        try {
-            const response = await axios.post(
-                authEndPoints.LOGOUT_API,
-                data,
-            );
-            console.log("Logout response:", response);
-            dispatch(logout());
-        } catch (error) {
-            console.log("login error :", error);
-            const errorMessage = getErrorMessage(error);
-            toast.error(errorMessage);
-        } finally {
-            dispatch(setLoading(false));
-        }
-    }
-}
+// const logout = (data, navigate) => {
+//     return async (dispatch) => {
+//         dispatch(setLoading(true));
+//         try {
+            // const response = await axios.post(
+            //     authEndPoints.LOGOUT_API,
+            //     data,
+            // );
+            // console.log("Logout response:", response);
+//             dispatch(logout());
+//             navigate('/login');
+//         } catch (error) {
+//             console.log("login error :", error);
+//             const errorMessage = getErrorMessage(error);
+//             toast.error(errorMessage);
+//         } finally {
+//             dispatch(setLoading(false));
+//         }
+//     }
+// }
 
 
 export default {
     register: register,
     login: login,
-    logout: logout,
+    // logout: logout,
 }

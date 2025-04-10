@@ -5,12 +5,16 @@ import { MdSearch } from 'react-icons/md';
 import { FaUsers, FaChartBar, FaPlaneDeparture, FaSignOutAlt } from 'react-icons/fa';
 import { HiOutlineUserAdd } from "react-icons/hi";
 import CustomPopup from '../../common/CustomPopup';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../redux/reducers/slices/auth';
 
 const Sidebar = () => {
     const { pathname } = useLocation();
     const [active, setActive] = useState(pathname);
     const [isOpenPopup, setIsOpenPopup] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const navItems = [
         { label: "Candidates", path : '/',  icon: <HiOutlineUserAdd />, section: "Recruitment" },
@@ -27,7 +31,8 @@ const Sidebar = () => {
     }
 
     const logoutHandler = async () => {
-        console.log("Logout..");
+        await dispatch(logout());
+        navigate('/login');
     }
 
     return (
