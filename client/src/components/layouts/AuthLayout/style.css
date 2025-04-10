@@ -1,0 +1,97 @@
+.auth-body {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--white-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.authLayout-Container {
+    display: flex;
+    max-width: 1360px;
+    width: 90%;
+    flex-direction: row;
+    height: 624px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0px 4px 50px 0px #1212124D;
+    overflow: hidden;
+}
+
+.authLayout-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    /* max-width: 520px; */
+    width: 50%;
+}
+.authLayout-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    /* max-width: 520px; */
+    width: 50%;
+}
+
+.authLayout-left {
+    background: var(--voilet-color);
+    color: var(--white-color);
+}
+
+.authLayout-right {
+    background-color: var(--white-color);
+}
+
+.authLayout-left img {
+    max-width: 100%;
+    /* width: 520px; */
+    height: 284px;
+    border-radius: 20px;
+    /* object-fit: cover; */
+    /* align-self: center; */
+}
+
+.authLayout-left h3 {
+    text-align: center;
+    font-family: "Nunito", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.authLayout-left p {
+    font-size: 16px;
+    text-align: center;
+    line-height: 1.5;
+    font-family: "Nunito", sans-serif;
+    font-weight: 400;
+}
+
+.circle-box{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.circle-box p{
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--white-color);
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+.circle-box .active{
+    background-color: var(--white-color);
+}

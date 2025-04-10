@@ -1,0 +1,74 @@
+.leave-section-container {
+    width: 100%;
+    max-width: 388px;
+    margin: auto;
+    border-radius: 20px;
+    background: var(--white-color);
+    box-shadow: 0px 4px 10px 0px #12121233;
+    font-family: 'Nunito', sans-serif;
+    overflow: hidden;
+}
+
+.calendar-header-title {
+    background-color: var(--voilet-color);
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 16px 16px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.approved-leaves {
+    padding: 16px;
+}
+
+.approved-leaves h4 {
+    color: var(--voilet-color);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.leave-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.leave-item:last-child {
+    border-bottom: none;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.leave-info {
+    flex-grow: 1;
+}
+
+.name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #222;
+}
+
+.position {
+    font-size: 12px;
+    color: var(--dark-grey-color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 140px;
+}
+
+.leave-date {
+    font-size: 13px;
+    color: var(--black-color);
+}

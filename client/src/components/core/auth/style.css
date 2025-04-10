@@ -1,0 +1,130 @@
+.authForm {
+    max-width: 375px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.authForm h2 {
+    font-family: Nunito;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: var(--black-color);
+    align-self: flex-start;
+}
+
+.authForm form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    font-family: "Nunito", sans-serif;
+}
+
+.authForm label {
+    font-family: "Nunito", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    font-weight: 500;
+}
+
+label span {
+    color: var(--red-color);
+}
+
+input {
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #E5E5E5;
+    outline: none;
+    transition: border 0.3s ease;
+    /* width: 100%; */
+}
+
+input::placeholder {
+    color: var(--dark-grey-color);
+    font-family: "Nunito", sans-serif;
+}
+
+input:focus {
+    border-color: var(--voilet-color);
+}
+
+.error {
+    align-self: flex-end;
+    margin-top: -6px;
+    padding-left: 2px;
+    color: var(--red-color);
+    font-size: 12px;
+    font-family: "Nunito", sans-serif;
+}
+
+.password-visible {
+    position: relative;
+    width: 100%;
+}
+
+.password-visible input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eye {
+    position: absolute;
+    font-size: 18px;
+    top: 15px;
+    right: 15px;
+    border-width: 1.5px;
+    color: var(--voilet-color);
+    cursor: pointer;
+}
+
+.authForm-btn {
+    width: 141px;
+    height: 38px;
+    background: var(--voilet-color);
+    color: var(--white-color);
+    cursor: pointer;
+    padding: 8px 40px;
+    margin-top: 12px;
+    align-self: flex-start;
+    border-radius: 50px;
+    border: none;
+    font-family: "Nunito", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+
+}
+
+.authForm-btn:hover {
+    background: var(--voilet-color);
+}
+
+.authForm-link {
+    font-family: "Nunito", sans-serif;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    align-self: flex-start;
+    color: var(--dark-grey-color);
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.authForm-link a {
+    color: var(--voilet-color);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}

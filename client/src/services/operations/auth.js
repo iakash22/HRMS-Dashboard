@@ -1,0 +1,80 @@
+import axios from 'axios';
+import { setUser, setLoading, setAccessToken } from '../../redux/reducers/slices/auth';
+import { authEndPoints } from '../api';
+import toast from 'react-hot-toast';
+import { getErrorMessage } from '../../utils/errorHandler';
+
+const register = (data, navigate) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+        try {
+            const response = await axios.post(
+                authEndPoints.REGISTER_API,
+                data,
+                {
+                    headers: { 'Content-Type': 'application/json', }
+                }
+            );
+            console.log("register response :", response);
+            navigate('/login');
+        } catch (error) {
+            console.log("Register error :", error);
+            const errorMessage = getErrorMessage(error);
+            toast.error(errorMessage);
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+}
+
+const login = (data, navigate) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+        try {
+            const response = await axios.post(
+                authEndPoints.LOGIN_API,
+                data,
+                {
+                    headers: { 'Content-Type': 'application/json', }
+                }
+            );
+            console.log("Login response:", response);
+            const accessToken = response.data?.accessToken;
+            dispatch(setAccessToken(accessToken));
+            dispatch(setUser(response.data?.data));
+        } catch (error) {
+            console.log("login error :", error);
+            const errorMessage = getErrorMessage(error);
+            toast.error(errorMessage);
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+}
+
+const logout = (data, navigate) => {
+    return async (dispatch) => {
+        dispatch(setLoading(true));
+        try {
+            const response = await axios.post(
+                authEndPoints.LOGOUT_API,
+                data,
+            );
+            console.log("Logout response:", response);
+            dispatch(logout());
+        } catch (error) {
+            console.log("login error :", error);
+            const errorMessage = getErrorMessage(error);
+            toast.error(errorMessage);
+        } finally {
+            dispatch(setLoading(false));
+        }
+    }
+}
+
+
+export default {
+    register: register,
+    login: login,
+    logout: logout,
+}

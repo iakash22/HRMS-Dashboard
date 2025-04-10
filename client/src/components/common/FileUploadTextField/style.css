@@ -1,0 +1,93 @@
+.file-upload-field {
+    margin-bottom: 1rem;
+    position: relative;
+    /* margin-top: -7px; */
+}
+
+.file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--voilet-color);
+    border-radius: 16px;
+    padding: 14px 16px;
+    position: relative;
+    cursor: pointer;
+    transition: border 0.2s ease;
+    background: var(--white-color);
+}
+
+.file-upload-wrapper.error {
+    border-color: var(--red-color);
+}
+
+.file-upload-wrapper:hover {
+    border-color: var(--voilet-color);
+}
+
+.file-label {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    color: var(--black-color);
+    font-size: 16px;
+    font-family: 'Nunito', sans-serif;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.file-label .required {
+    color: var(--red-color);
+    margin-left: 2px;
+}
+
+.file-upload-wrapper.has-file .file-label,
+.file-label.float {
+    top: -8px;
+    left: 12px;
+    background: var(--white-color);
+    padding: 0 4px;
+    font-size: 14px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.file-input {
+    position: absolute;
+    width: 70%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-display {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.file-name {
+    font-size: 16px;
+    color: var(--black-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 24px);
+    font-family: 'Nunito', sans-serif;
+}
+
+.icon {
+    font-size: 1.2rem;
+    color: var(--voilet-color);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.icon.upload {
+    margin-left: auto;
+}
+
+.error-msg {
+    color: var(--red-color);
+    font-size: 0.75rem;
+    margin-top: 4px;
+}

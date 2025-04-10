@@ -1,0 +1,75 @@
+.confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Nunito", sans-serif;
+}
+
+.confirm-box {
+    max-width: 1080px;
+    width: 70%;
+    border-radius: 20px;
+    background-color: var(--white-color);
+    overflow: hidden;
+    box-shadow: 0px 4px 10px 773px #12121280;
+    font-family: "Nunito", sans-serif;
+    border: 1px solid var(--grey-color)
+}
+
+.confirm-header {
+    background-color: var(--voilet-color);
+    color: var(--white-color);
+    padding: 16px;
+    font-size: 20px;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.confirm-body {
+    padding: 24px;
+    text-align: center;
+}
+
+.confirm-body p {
+    margin-bottom: 28px;
+    font-size: 16px;
+    color: var(--black-color);
+    font-family: "Nunito", sans-serif;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.cancel-btn,
+.logout-btn {
+    padding: 8px 40px;
+    font-size: 16px;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-family: "Nunito", sans-serif;
+    transition: all 0.2s ease;
+    min-width: 130px;
+}
+
+.cancel-btn {
+    background-color: var(--voilet-color);
+    color: var(--white-color);
+    border: none;
+    box-shadow: 0px 4px 20px 0px #12121226;
+}
+
+.logout-btn {
+    background-color: transparent;
+    color: var(--red-color);
+    border: 1px solid var(--red-color);
+}

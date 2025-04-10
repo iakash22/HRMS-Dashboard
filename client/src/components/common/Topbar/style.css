@@ -1,0 +1,68 @@
+.topbar {
+    background-color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Nunito", sans-serif;
+    margin-top: 15px;
+}
+
+.left-section h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--black-color);
+    font-family: "Nunito", sans-serif;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon-button {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black-color);
+}
+
+.icon-button:hover {
+    background-color: #f2f2f2;
+    border-radius: 6px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.dropdown-icon {
+    color: var(--voilet-color); /* your theme purple */
+}
+
+.red-circle{
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: var(--red-color);
+    border-radius: 50%;
+    right: 4px;
+    top: 10px;
+}

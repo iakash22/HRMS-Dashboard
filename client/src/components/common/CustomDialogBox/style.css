@@ -1,0 +1,145 @@
+.dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.dialog-box {
+    background: white;
+    max-width: 1080px;
+    width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    padding-bottom: 16px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.dialog-header {
+    background-color: var(--voilet-color);
+    color: var(--white-color);
+    padding: 18px 24px;
+    position: relative;
+    text-align: center;
+}
+
+.dialog-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+}
+
+.close-btn {
+    position: absolute;
+    right: 18px;
+    top: 16px;
+    background: transparent;
+    color: var(--white-color);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+
+.dialog-form {
+    padding: 24px;
+}
+
+.dialog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
+
+.dialog-grid .form-group .input-wrapper {
+    width: 300px;
+    max-width: 100%;
+}
+
+.dialog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.declaration {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Nunito", sans-serif;
+    font-size: 16px;
+    color: var(--dark-grey-color);
+}
+
+
+.form-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 32px;
+    gap: 16px;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Nunito", sans-serif;
+    font-size: 16px;
+    color: var(--dark-grey-color);
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    padding-left: 28px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.custom-checkbox .checkmark {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    height: 18px;
+    width: 18px;
+    border-radius: 4px;
+    background-color: white;
+    border: 2px solid var(--voilet-color);
+    transition: 0.2s;
+}
+
+.custom-checkbox input:checked~.checkmark {
+    background-color: var(--voilet-color);
+    background-image: url("data:image/svg+xml,%3Csvg fill='white' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20.285 6.709l-11.98 11.979-5.285-5.285 1.414-1.414 3.871 3.871 10.566-10.566z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.submit-btn {
+    margin-top: 20px;
+    background-color: var(--voilet-color);
+    color: white;
+    padding: 8px 40px;
+    border-radius: 50px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0px 4px 20px 0px #12121226;
+    align-self: center;
+}
+
+.submit-btn:disabled {
+    background-color: var(--dark-grey-color);
+    cursor: not-allowed;
+}
+
