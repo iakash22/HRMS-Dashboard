@@ -11,7 +11,7 @@ const applyLeave = async (payload) => {
             employee: payload.employeeId,
             date: today,
             isDeleted: false,
-        }).populate("employee", "fullName email profilePic position").lean().exec();
+        }).populate("employee", "fullName profilePic position").lean().exec();
 
         if (!attendance || attendance.status !== "Present") {
             return { success: false, status: 400, message: "Only 'Present' employees can apply for leave." };
@@ -92,9 +92,12 @@ const getAndSearchLeaves = async (payload) => {
                 .skip((page - 1) * pageSize)
                 .limit(pageSize)
                 .sort({ createdAt: -1 })
-                .populate("employee", "fullName email profilePic position"),
+                .populate("employee", "fullName profilePic")
+                .lean(),
             models.Leave.countDocuments(whereClause)
         ]);
+
+        const data = leaves.map(({ employee, ...rest }) => ({ ...rest, employeeId: employee?._id, profilePic: employee?.profilePic, fullName: employee?.fullName }));
 
         const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -103,7 +106,7 @@ const getAndSearchLeaves = async (payload) => {
             status: 200,
             message: "Leaves fetched successfully.",
             data: {
-                users: leaves,
+                users: data,
                 page,
                 pageSize,
                 totalPages,
@@ -155,5 +158,5 @@ module.exports = {
     applyLeave: applyLeave,
     updateLeaveStatus: updateLeaveStatus,
     getAndSearchLeaves: getAndSearchLeaves,
-    getLeaveCountsByDate : getLeaveCountsByDate
+    getLeaveCountsByDate: getLeaveCountsByDate
 }

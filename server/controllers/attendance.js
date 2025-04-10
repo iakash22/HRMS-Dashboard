@@ -63,7 +63,6 @@ const getAndSearchAttendance = async (payload) => {
         taskDocs.forEach((t) => {
             taskMap.set(t.employee.toString(), {
                 description: t.description,
-                isCompleted: t.isCompleted,
             });
         });
 
@@ -71,7 +70,7 @@ const getAndSearchAttendance = async (payload) => {
             .map((emp) => {
                 const id = emp._id.toString();
                 const attendance = attendanceMap.get(id) || "Not Marked";
-                const task = taskMap.get(id) || { description: "", isCompleted: false };
+                const task = taskMap.get(id)?.description || "";
 
                 return {
                     ...emp._doc,
@@ -102,7 +101,7 @@ const getAndSearchAttendance = async (payload) => {
 const markAttendance = async (payload) => {
     try {
         const today = new Date();
-        today.setHours(0, 0, 0, 0); 
+        today.setHours(0, 0, 0, 0);
 
         const existing = await models.Attendance.findOne({ employee: payload?.employeeId, date: today });
 
@@ -110,7 +109,7 @@ const markAttendance = async (payload) => {
             existing.status = payload?.status;
             existing.updatedAt = new Date();
             await existing.save();
-            return { success: true, status :200, message: 'Attendance updated successfully', data: { _id: existing?.employee, status: existing?.status } };
+            return { success: true, status: 200, message: 'Attendance updated successfully', data: { _id: existing?.employee, status: existing?.status } };
         }
 
         const attendance = await models.Attendance.create({
@@ -121,7 +120,7 @@ const markAttendance = async (payload) => {
             updatedAt: new Date(),
         });
 
-        return { success: true, status : 200, message: 'Attendance updated successfully', data: { _id: attendance?.employee, status: attendance?.status } };
+        return { success: true, status: 200, message: 'Attendance updated successfully', data: { _id: attendance?.employee, status: attendance?.status } };
     }
     catch (error) {
         console.error("Error marking attendance:", error);
@@ -132,5 +131,5 @@ const markAttendance = async (payload) => {
 
 module.exports = {
     getAndSearchAttendance: getAndSearchAttendance,
-    markAttendance : markAttendance,
+    markAttendance: markAttendance,
 }
