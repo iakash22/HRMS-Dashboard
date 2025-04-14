@@ -1,0 +1,222 @@
+.custom-textfield {
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.textfield-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--white-color);
+    border: 1px solid var(--voilet-color);
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    transition: border 0.2s ease;
+}
+
+.textfield-wrapper input,
+.date-picker-input {
+    width: 100%;
+    padding: 0.1rem 0;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 400;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+}
+
+.textfield-wrapper label {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--white-color);
+    padding: 0 0.25rem;
+    color: var(--black-color);
+    pointer-events: none;
+    transition: all 0.2s ease;
+    font-family: 'Nunito', sans-serif;
+}
+
+.textfield-wrapper input:focus+label,
+.textfield-wrapper input:not(:placeholder-shown)+label,
+.date-picker-input:focus+label,
+.date-picker-input.filled+label,
+.textfield-wrapper select.dropdown-input.filled+label,
+.textfield-wrapper select.dropdown-input:focus+label {
+    top: -0.1rem;
+    left: 0.75rem;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--voilet-color);
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Style for select dropdown */
+.textfield-wrapper select.dropdown-input {
+    appearance: none;
+    /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: var(--white-color);
+    border: none;
+    font-size: 18px;
+    padding: 0.15rem 0;
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    color: var(--black-color);
+    cursor: pointer;
+}
+
+.textfield-wrapper select.dropdown-input:focus {
+    outline: none;
+}
+
+/* Optional: adjust padding so arrow doesn't overlap text */
+.textfield-wrapper select.dropdown-input {
+    padding-right: 2rem;
+}
+
+/* Error state */
+.textfield-wrapper.error select.dropdown-input {
+    border-color: var(--red-color);
+}
+
+
+.textfield-wrapper .textfield-icon {
+    margin-left: auto;
+    color: var(--voilet-color);
+}
+
+.required {
+    color: var(--red-color);
+    margin-left: 0.25rem;
+}
+
+.error-msg {
+    color: var(--red-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.textfield-wrapper.error {
+    border-color: var(--red-color);
+}
+
+.datepicker-wrapper {
+    width: 100%;
+}
+
+.react-datepicker-popper {
+    z-index: 1100 !important;
+    /* top: -50% !important; */
+    right: 45%;
+}
+
+.react-datepicker-popper .react-datepicker__triangle {
+    display: none;
+}
+
+.custom-datepicker-calendar {
+    height: auto;
+    background-color: var(--white-color);
+    box-shadow: 0px 0px 10px 0px #12121226;
+    border: none;
+    border-radius: 24px;
+    padding: 0px 10px;
+    font-family: "Nunito", sans-serif;
+}
+
+.react-datepicker__header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: 10px 0 0 0;
+}
+
+h2.react-datepicker__current-month {
+    margin: 5px 32px;
+    margin-bottom: 18px;
+}
+
+.react-datepicker__navigation-icon::before {
+    border-color: var(--voilet-color);
+    border-width: 2px 2px 0 0;
+    height: 7px;
+    width: 7px;
+}
+
+.react-datepicker__navigation--previous {
+    top: 8px;
+    left: 1px;
+}
+
+.react-datepicker__navigation--next {
+    left: 160px;
+}
+
+.react-datepicker__navigation {
+    top: 11px;
+}
+
+.react-datepicker__current-month {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--black-color);
+    text-align: center;
+    text-align: start;
+}
+
+.react-datepicker__day-names {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    padding: 0px 5px;
+}
+
+.react-datepicker__day-name {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--dark-grey-color);
+    text-align: center;
+    width: 36px;
+}
+
+.react-datepicker__month {
+    margin: 0;
+    padding: 0 10px 10px;
+}
+
+.react-datepicker__week {
+    display: flex;
+    gap: 16px;
+}
+
+.react-datepicker__day {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    margin: 2px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--black-color);
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.react-datepicker__day--disabled,
+.react-datepicker__day--outside-month {
+    color: var(--grey-color) !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    background-color: var(--voilet-color) !important;
+    color: var(--white-color) !important;
+    border-radius: 50%;
+}
+
+.react-datepicker__day--today {
+    font-weight: bold;
+    color: var(--black-color);
+}

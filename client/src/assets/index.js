@@ -17,6 +17,7 @@ import CalendarIcon from './icons/calendar.svg?react';
 import LeaveIcon from './icons/leave.svg?react';
 import LogoutIcon from './icons/logout.svg?react';
 import MailIcon from './icons/mail.svg?react';
+import CrossIcon from './icons/cross.svg?react';
 
 export {
     SearchIcon,
@@ -38,4 +39,5 @@ export {
     LeaveIcon,
     LogoutIcon,
     MailIcon,
+    CrossIcon,
 };

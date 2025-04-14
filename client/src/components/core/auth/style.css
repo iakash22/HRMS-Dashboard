@@ -128,3 +128,40 @@ input:focus {
 .login-link a:hover {
     text-decoration: underline;
 }
+
+@media only screen and (min-width: 1441px) {
+    .authForm  {
+        max-width: 80%;
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
+    .authForm {
+        max-width: 90%;
+    }
+
+    .authForm h2 {
+        font-size: 24px;
+        margin-bottom: 1rem;
+        align-self: center;
+    }
+
+    .login h2{
+        margin-bottom: 2rem;
+    }
+}
+
+@media only screen and (max-width: 520px){
+    .authForm {
+        max-width: 100%;
+    }
+
+    .authForm h2 {
+        font-size: 20px;
+    }
+
+    .authForm-link{
+        margin-top: 0px;
+    }
+}

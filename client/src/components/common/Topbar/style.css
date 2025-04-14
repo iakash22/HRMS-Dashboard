@@ -48,14 +48,16 @@
 }
 
 .profile-icon {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .dropdown-icon {
-    color: var(--voilet-color); /* your theme purple */
+    color: var(--voilet-color);
+    cursor: pointer;
 }
 
 .red-circle{
@@ -66,4 +68,13 @@
     border-radius: 50%;
     right: 4px;
     top: 10px;
+}
+
+.dropdown-icon {
+    margin-left: 8px;
+    transition: transform 0.2s;
+}
+
+.dropdown-icon.up {
+    transform: rotate(180deg);
 }

@@ -29,6 +29,6 @@ export const attendanceEndPoints = {
 export const leaveEndPoints = {
     APPLY_LEAVE_API : BASE_URL + API_VERSION + '/leave/apply',
     GET_AND_SEARCH_LEAVE_API : BASE_URL + API_VERSION + '/leave',
-    APPROVED_LEAVE_COUNT_LEAVE_API : BASE_URL + API_VERSION + '/leave/approvedLeaveCount',
+    GET_APPROVED_LEAVE_API : BASE_URL + API_VERSION + '/leave/approvedLeaves',
     UPDATE_LEAVE_STATUS_API : BASE_URL + API_VERSION + '/leave/update',
 }

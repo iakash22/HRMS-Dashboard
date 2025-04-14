@@ -1,74 +1,85 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import AppLayout from '../../components/layouts/AppLayout'
 import './style.css';
 import CustomDropdown from '../../components/common/CustomDropDown';
 import { MdSearch } from 'react-icons/md';
 import DynamicTable from '../../components/common/DynamicTable';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Services from '../../services/operations';
 import { attendanceEndPoints } from '../../services/api';
-
-
-const attendanceFilterStatus = ["Status", "Present", "Absent", "Medical Leave", "Work From Home"];
-const attendanceStatus = ["Present", "Absent"]
-
-const attendanceTableColumn = [
-    { key: 'profile', label: 'Profile' },
-    { key: 'fullName', label: 'Employee Name' }, 
-    { key: 'position', label: 'Position' },
-    { key: 'task', label: 'Task' },
-    { key: 'Status', label: 'Status' },
-    { key: 'Action', label: 'Action' },
-]
+import { setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
+import { debounce } from '../../utils/optimizers';
+import { attendanceTableColumn } from '../../constant/tableColumnData'
+import { attendanceFilterStatus, attendanceStatus } from '../../constant/filterAndDropDownData'
 
 const Attendance = () => {
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
+    const { page, pageSize, status, search, hasMore, loading, data } = useSelector((state) => state.table.attendance);
     const { accessToken } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
 
-    const fetchAttendance = async () => {
+    const fetchAttendance = async (searchValue = "") => {
         if (loading || !hasMore) return;
-
-        setLoading(true);
-        const query = { page, pageSize: 10 };
-
+        dispatch(setLoading({ pageKey: "attendance", loading: true }));
+        const query = { page, pageSize, status, search: searchValue };
         try {
-            const response = await Services.getAndSearchOpeartion(attendanceEndPoints.GET_AND_SEARCH_ATTENDANCE_API, query, accessToken, setLoading);
-
-            console.log("response: ", response);
-            const newAttendace = response?.users || [];
+            const response = await Services.getAndSearchOpeartion(attendanceEndPoints.GET_AND_SEARCH_ATTENDANCE_API, query, accessToken);
+            const attendance = response?.users || [];
             const totalPages = response?.totalPages || 1;
 
-            setData(prev => [...prev, ...newAttendace]);
-            setPage(prev => prev + 1);
-
-            // If you've reached the last page, stop further requests
-            if (page >= totalPages || newAttendace.length === 0) {
-                setHasMore(false);
-            }
-        } catch (error) {
-            console.error("Error fetching Attendance:", error);
+            console.log(response);
+            dispatch(setData({ pageKey: "attendance", data: attendance, append: page > 1 }));
+            dispatch(setPagination({ pageKey: "attendance", page: page + 1, hasMore: page < totalPages }));
+        } catch (err) {
+            console.error("Error:", err);
         } finally {
-            setLoading(false);
+            dispatch(setLoading({ pageKey: "attendance", loading: false }));
         }
     };
 
     useEffect(() => {
         fetchAttendance();
-    }, [])
+    }, [status])
+
+    const handleStatusChange = (value, label) => {
+        dispatch(updateFilter({ pageKey: "attendance", key: label, value }));
+        dispatch(setPagination({ pageKey: "attendance", page: 1, hasMore: true }));
+        dispatch(setData({ pageKey: "attendance", data: [] }));
+    };
+
+    const debouncedSearch = useCallback(
+        debounce((val) => {
+            dispatch(setPagination({ pageKey: "attendance", page: 1, hasMore: true }));
+            dispatch(setData({ pageKey: "attendance", data: [] }));
+            fetchAttendance(val);
+        }, 500), []
+    );
+
+    const onSearchHandler = (e) => {
+        const val = e.target.value;
+        dispatch(updateFilter({ pageKey: "attendance", key: 'search', value: val }));
+        if (val.trim() === "") return;
+        debouncedSearch(val);
+    };
+
+    const updateStatusHandler = async (employeeId, status) => {
+        // console.log("CandidateId, status", candidateId, status);
+        if (status == "Not Marked") {
+            return;
+        } else {
+            await Services.AttendanceOperation.markAttendanceStatus({ employeeId, status }, accessToken);
+        }
+    }
 
     return (
         <>
             <div className="toolbar-container">
                 <div className='toolbar-left'>
-                    <CustomDropdown data={attendanceFilterStatus} />
+                    <CustomDropdown data={attendanceFilterStatus} handleStatusChange={handleStatusChange} label="Status" extraStyles={{ width: "190px" }} />
                 </div>
                 <div className='toolbar-right'>
                     <div className="search-bar">
                         <MdSearch className="search-icon" />
-                        <input type="text" placeholder="Search" />
+                        <input type="text" placeholder="Search" value={search} onChange={onSearchHandler} />
                     </div>
                 </div>
             </div>
@@ -79,6 +90,8 @@ const Attendance = () => {
                 loading={loading}
                 hasMore={hasMore}
                 onScrollEnd={fetchAttendance}
+                dropDownData={attendanceStatus}
+                dropDownHandler={updateStatusHandler}
             />
         </>
     )

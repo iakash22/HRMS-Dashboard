@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import "./style.css";
 import { DropdownIcon } from '../../../assets'
 
-const statusOptions = ["New", "Scheduled", "Ongoing", "Selected", "Rejected"];
-
-const CustomDropdown = ({ data = statusOptions, extraStyles}) => {
+const CustomDropdown = ({ data, extraStyles, handleStatusChange, label = "", value }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState(data[0] || statusOptions[0]);
+    const initialValue = data.find((val) => val.title === value);
+    const [selected, setSelected] = useState(initialValue || data[0]);
     const dropdownRef = useRef(null);
     const [dropUp, setDropUp] = useState(false);
 
@@ -24,31 +23,34 @@ const CustomDropdown = ({ data = statusOptions, extraStyles}) => {
         if (!isOpen) {
             const rect = dropdownRef.current.getBoundingClientRect();
             const spaceBelow = window.innerHeight - rect.bottom;
-            setDropUp(spaceBelow < 150); // 150px is approx dropdown height
+            setDropUp(spaceBelow < 150);
         }
         setIsOpen(!isOpen);
     };
 
     const handleSelect = (option) => {
         setSelected(option);
+        const value = label == option?.title ? "" : option?.title;
+        const lowelCaseLabel = label.toLowerCase();
+        handleStatusChange(value, lowelCaseLabel);
         setIsOpen(false);
     };
 
     return (
         <div className="dropdown-wrapper" ref={dropdownRef}>
-            <button className={`dropdown-toggle status-${selected}`} onClick={toggleDropdown} style={extraStyles}>
-                {selected}
+            <button className={`dropdown-toggle ${selected?.color}`} onClick={toggleDropdown} style={extraStyles}>
+                {selected?.title}
                 <span className={`arrow ${isOpen ? "up" : "down"}`}><DropdownIcon /></span>
             </button>
             {isOpen && (
                 <div className={`dropdown-menu ${dropUp ? "drop-up" : ""}`}>
-                    {data.map((option) => (
+                    {data.map((option,index) => (
                         <div
-                            key={option}
-                            className={`dropdown-item ${selected === option ? "selected" : ""}`}
+                            key={index}
+                            className={`dropdown-item ${selected?.title === option.title ? "selected" : ""}`}
                             onClick={() => handleSelect(option)}
                         >
-                            {option}
+                            {option.title}
                         </div>
                     ))}
                 </div>
@@ -59,4 +61,4 @@ const CustomDropdown = ({ data = statusOptions, extraStyles}) => {
 
 
 
-export default CustomDropdown;
+export default memo(CustomDropdown);

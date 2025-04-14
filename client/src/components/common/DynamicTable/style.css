@@ -1,31 +1,45 @@
 .dynamic-table-container {
-    max-height: 580px;
-    overflow-y: auto;
+    max-height: 580px; /* Fixed max height */
+    max-width: 100%; /* Prevents overflow on small screens */
+    overflow-y: auto; /* Vertical scroll for table body */
+    overflow-x: auto; /* Horizontal scroll for wide tables */
     position: relative;
     border-radius: 20px;
     background: var(--white-color);
     border: 1px solid var(--grey-color);
     box-shadow: 0px 4px 10px 0px #12121233;
     font-family: "Nunito", sans-serif;
+    display: block; /* Ensures container respects max-width */
 }
 
 .dynamic-table-container::-webkit-scrollbar {
-    display: none;
+    width: 8px; /* Visible scrollbar for better UX */
+    height: 8px; /* For horizontal scrollbar */
+}
+
+.dynamic-table-container::-webkit-scrollbar-thumb {
+    background: var(--grey-color);
+    border-radius: 4px;
+}
+
+.dynamic-table-container::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .dynamic-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    font-family: 'Nunito', sans-serif;
-    /* table-layout: fixed; */
+    font-family: "Nunito", sans-serif;
+    table-layout: auto; /* Allows columns to size based on content */
+    min-width: 800px; /* Ensures table is wide enough, triggers horizontal scroll if needed */
 }
 
 .dynamic-table thead th {
     background-color: var(--voilet-color);
     color: var(--white-color);
     height: 54px;
-    padding: 0px 20px;
+    padding: 0 20px;
     font-size: 16px;
     font-weight: 600;
     text-align: left;
@@ -35,11 +49,10 @@
     z-index: 1000;
 }
 
-
 .dynamic-table tbody td {
     padding: 5px 20px;
     font-size: 16px;
-    white-space: nowrap;
+    white-space: nowrap; /* Prevents text wrapping */
 }
 
 .no-data-cell {
@@ -50,8 +63,11 @@
 }
 
 .scroll-loader-footer {
-    position: relative;
+    position: sticky;
+    bottom: 0;
     width: 100%;
+    background: var(--white-color); /* Matches table background */
+    z-index: 900;
 }
 
 .end-reveal {
@@ -76,196 +92,64 @@
     font-weight: 500;
 }
 
-
-@media screen and (max-width : 1080px) {
-    .dynamic-table {
-        table-layout: fixed;
-    }
+.docs-icon {
+    color: var(--voilet-color);
+    cursor: pointer;
 }
 
-/* .dynamic-table-container {
-    overflow: auto;
-    max-height: 580px;
-    border-radius: 20px;
-    background: var(--white-color);
-    border: 1px solid var(--grey-color);
-    box-shadow: 0px 4px 10px 0px #12121233;
-    font-family: "Nunito", sans-serif;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    position: relative;
-    min-height: 300px; 
+.docs-icon.no-docs {
+    color: var(--dark-grey-color);
+    cursor: auto;
 }
 
-.dynamic-table-container::-webkit-scrollbar {
-    display: none;
-}
-
-.dynamic-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-family: 'Nunito', sans-serif;
-    table-layout: fixed;
-}
-
-.dynamic-table thead th {
-    background-color: var(--voilet-color);
-    color: var(--white-color);
-    height: 54px;
-    padding: 0px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: left;
-    white-space: nowrap;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.dynamic-table tbody td {
-    padding: 12px 20px;
-    font-size: 16px;
-    height: 48px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-}
-
-
-.no-data-cell {
-    text-align: center;
-    padding: 20px;
-    font-size: 16px;
-    color: var(--grey-color);
-}
-
-
+/* Responsive Design for Smaller Screens */
 @media screen and (max-width: 768px) {
+    .dynamic-table-container {
+        max-height: 500px; /* Slightly smaller for mobile */
+    }
+
+    .dynamic-table {
+        min-width: 600px; /* Still allows horizontal scrolling */
+    }
+
+    /* Optional: Stack table for very small screens */
     .dynamic-table thead {
-        display: none;
+        display: none; /* Hide headers */
     }
 
-    .dynamic-table, .dynamic-table tbody, .dynamic-table tr, .dynamic-table td {
+    .dynamic-table tbody tr {
         display: block;
-        width: 100%;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--grey-color);
     }
 
-    .dynamic-table tr {
-        margin-bottom: 20px;
-        border: 1px solid var(--grey-color);
-        border-radius: 10px;
-        overflow: hidden;
-        background-color: #fff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .dynamic-table td {
+    .dynamic-table tbody td {
+        display: block;
         text-align: right;
-        padding-left: 50%;
         position: relative;
+        padding-left: 50%;
+        padding-right: 20px;
+        border: none;
     }
 
-    .dynamic-table td::before {
+    .dynamic-table tbody td::before {
         content: attr(data-label);
         position: absolute;
         left: 20px;
         width: 45%;
-        white-space: nowrap;
-        text-align: left;
         font-weight: 600;
-        color: #555;
-    }
-} */
-
-
-/* Container with padding and shadow */
-.responsive-table-wrapper {
-    overflow-x: auto;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
-    padding: 16px;
-    max-width: 100%;
-}
-
-/* Base table styling */
-.responsive-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Nunito', sans-serif;
-    min-width: 600px;
-}
-
-.responsive-table thead {
-    background-color: #6c63ff;
-    color: white;
-}
-
-.responsive-table th,
-.responsive-table td {
-    padding: 12px 16px;
-    text-align: left;
-    font-size: 15px;
-    border-bottom: 1px solid #eee;
-    word-break: break-word;
-}
-
-/* Sticky header on larger screens */
-@media (min-width: 768px) {
-    .responsive-table thead th {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: #6c63ff;
-    }
-}
-
-/* No data fallback */
-.no-data-row td {
-    text-align: center;
-    padding: 24px 0;
-    font-style: italic;
-    color: #777;
-}
-
-/* Mobile view adjustments */
-@media screen and (max-width: 768px) {
-    .responsive-table thead {
-        display: none;
-    }
-
-    .responsive-table,
-    .responsive-table tbody,
-    .responsive-table tr,
-    .responsive-table td {
-        display: block;
-        width: 100%;
-    }
-
-    .responsive-table tr {
-        margin-bottom: 16px;
-        border-radius: 10px;
-        background: #f9f9f9;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    .responsive-table td {
-        padding-left: 50%;
-        position: relative;
-        text-align: right;
-        padding-right: 16px;
-    }
-
-    .responsive-table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 16px;
-        top: 12px;
-        font-weight: 600;
-        color: #444;
         text-align: left;
-        white-space: nowrap;
+    }
+
+    /* Adjust specific columns for better mobile display */
+    .dynamic-table tbody td[data-label="profile"] img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .dynamic-table tbody td[data-label="Action"],
+    .dynamic-table tbody td[data-label="Status"] {
+        text-align: center;
+        padding-left: 20px;
     }
 }

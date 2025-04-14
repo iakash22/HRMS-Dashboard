@@ -1,33 +1,48 @@
+import toast from 'react-hot-toast';
+import store from '../redux/store';
+import { logout as logoutUser } from '../redux/reducers/slices/auth';
+
 export const getErrorMessage = (error) => {
-    if (!error) return "Something went wrong. Please try again.";
+    if (!error) return 'Something went wrong. Please try again.';
 
     // Axios error with response
     if (error.response) {
-        const { data } = error.response;
+        const { data, status } = error.response;
 
-        // If the response is a simple message
-        if (typeof data === "string") return data;
-
-        // If the message field exists
-        if (data?.message) return data.message;
-
-        // If validation errors exist (e.g., Express, Laravel, Django)
-        if (data?.errors && typeof data.errors === "object") {
-            const allErrors = Object.values(data.errors).flat();
-            return allErrors[0] || "Please check your input.";
+        // Token expired or invalid
+        if (status === 401 || status === 403) {
+            const message = data?.message || 'Session expired. Please login again.';
+            handleTokenExpiry(message);
+            return message;
         }
 
-        return "Request failed. Please try again.";
+        if (typeof data === 'string') return data;
+        if (data?.message) return data.message;
+
+        // Validation errors
+        if (data?.errors && typeof data.errors === 'object') {
+            const allErrors = Object.values(data.errors).flat();
+            return allErrors[0] || 'Please check your input.';
+        }
+
+        return 'Request failed. Please try again.';
     }
 
-    // No response from server (network error)
+    // No response from server
     if (error.request) {
-        return "Unable to connect. Check your internet connection.";
+        return 'Unable to connect. Check your internet connection.';
     }
 
-    // If error is a string
-    if (typeof error === "string") return error;
+    // If error is string
+    if (typeof error === 'string') return error;
 
-    // Fallback for unknown errors
-    return "Something went wrong. Try again later.";
+    return 'Something went wrong. Try again later.';
+};
+
+export const handleTokenExpiry = (message = "Session expired. Please login again.") => {
+    toast.error(message);
+    setTimeout(() => {
+        store.dispatch(logoutUser());
+        window.location.href = '/login';
+    }, 1000);
 };

@@ -1,11 +1,16 @@
-import React from 'react'
+import React from 'react';
 import './style.css';
-import AppLayout from '../../layouts/AppLayout';
 
-const index = () => {
+const Loader = ({ parentExtraStyle, circleStyles}) => {
     return (
-        <div>Loading...</div>
-    )
-}
+        <div className="loader-container" style={parentExtraStyle}>
+            <div className="pulse-loader">
+                <div style={circleStyles}></div>
+                <div style={circleStyles}></div>
+                <div style={circleStyles}></div>
+            </div>
+        </div>
+    );
+};
 
-export default AppLayout(index)
+export default Loader;

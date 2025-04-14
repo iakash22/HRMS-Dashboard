@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import AppLayout from '../../components/layouts/AppLayout';
 import DynamicTable from '../../components/common/DynamicTable';
 import './style.css'
@@ -7,176 +7,147 @@ import { MdSearch } from 'react-icons/md';
 import CustomDialogBox from '../../components/common/CustomDialogBox';
 import Services from '../../services/operations';
 import { candidateEndPoints } from '../../services/api';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeItem, setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
+import { debounce } from '../../utils/optimizers';
+import toast from 'react-hot-toast';
+import { candidateFormFields } from '../../constant/formFieldsData'
+import { candidateTableColumn } from '../../constant/tableColumnData'
+import { candidateStatus, candidateFilterpostion, candidateFilterStatus } from '../../constant/filterAndDropDownData'
 
-const candidateData = [
-    {
-        SrNo: '01',
-        CandidatesName: 'Jacob William',
-        Email: 'jacob.william@example.com',
-        Phone: '(252) 555-0111',
-        Position: 'Senior Developer',
-        Status: 'New',
-        Experience: '1+',
-        Action: '...',
-    },
-    {
-        SrNo: '02',
-        CandidatesName: 'Guy Hawkins',
-        Email: 'kenzi.lawson@example.com',
-        Phone: '(907) 555-0101',
-        Position: 'Human Resource I...',
-        Status: 'New',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '03',
-        CandidatesName: 'Arlene McCoy',
-        Email: 'arlene.mccoy@example.com',
-        Phone: '(302) 555-0107',
-        Position: 'Full Time Designer',
-        Status: 'Selected',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '04',
-        CandidatesName: 'Leslie Alexander',
-        Email: 'willie.jennings@example.com',
-        Phone: '(207) 555-0119',
-        Position: 'Full Time Developer',
-        Status: 'Rejected',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '04',
-        CandidatesName: 'Leslie Alexander',
-        Email: 'willie.jennings@example.com',
-        Phone: '(207) 555-0119',
-        Position: 'Full Time Developer',
-        Status: 'Rejected',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '04',
-        CandidatesName: 'Leslie Alexander',
-        Email: 'willie.jennings@example.com',
-        Phone: '(207) 555-0119',
-        Position: 'Full Time Developer',
-        Status: 'Rejected',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '04',
-        CandidatesName: 'Leslie Alexander',
-        Email: 'willie.jennings@example.com',
-        Phone: '(207) 555-0119',
-        Position: 'Full Time Developer',
-        Status: 'Rejected',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '04',
-        CandidatesName: 'Leslie Alexander',
-        Email: 'willie.jennings@example.com',
-        Phone: '(207) 555-0119',
-        Position: 'Full Time Developer',
-        Status: 'Rejected',
-        Experience: '0',
-        Action: '...',
-    },
-    {
-        SrNo: '04',
-        CandidatesName: 'Leslie Alexander',
-        Email: 'willie.jennings@example.com',
-        Phone: '(207) 555-0119',
-        Position: 'Full Time Developer',
-        Status: 'Rejected',
-        Experience: '0',
-        Action: '...',
-    },
-];
 
-const candidateColumns = [
-    { key: 'SrNo', label: 'Sr no.' },
-    { key: 'fullName', label: 'Candidates Name' },
-    { key: 'email', label: 'Email Address' },
-    { key: 'phone', label: 'Phone Number' },
-    { key: 'position', label: 'Position' },
-    { key: 'Status', label: 'Status' },
-    { key: 'experience', label: 'Experience' },
-    { key: 'Action', label: 'Action' },
-];
 
-const newFilterToolbar = ["New", "Scheduled", "Ongoing", "Selected", "Rejected"];
-const positionFilterToolbar = ["Position", "Designer", "Developer", "Human Resource"]
+// const newFilterToolbar = ["Status", "New", "Scheduled", "Ongoing", "Selected", "Rejected"];
+// const positionFilterToolbar = ["Position", "Designer", "Developer", "Human Resource"]
 
 const Candidates = () => {
     const [open, setOpen] = useState(false);
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
+    const { page, pageSize, status, position, search, hasMore, loading, data } = useSelector((state) => state.table.candidate);
     const { accessToken } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
 
-    
-    const handleDownloadResume = (candidate) => {
-        console.log('Download resume for:', candidate);
-    };
-
-    const handleDeleteCandidate = (candidate) => {
-        console.log('Delete candidate:', candidate);
-    };
-
-    const fetchCandidate = async () => {
+    const fetchCandidate = async (searchValue = "") => {
         if (loading || !hasMore) return;
-
-        setLoading(true);
-        const query = { page, pageSize: 10 };
-
+        dispatch(setLoading({ pageKey: "candidate", loading: true }));
+        const query = { page, pageSize, status, position, search: searchValue };
         try {
-            const response = await Services.getAndSearchOpeartion(candidateEndPoints.GET_AND_SEARCH_CANDIDATE_API, query, accessToken, setLoading);
-
-            const newCandidates = response?.users || [];
+            const response = await Services.getAndSearchOpeartion(candidateEndPoints.GET_AND_SEARCH_CANDIDATE_API, query, accessToken);
+            const users = response?.users || [];
             const totalPages = response?.totalPages || 1;
 
-            setData(prev => [...prev, ...newCandidates]);
-            setPage(prev => prev + 1);
-
-            // If you've reached the last page, stop further requests
-            if (page >= totalPages || newCandidates.length === 0) {
-                setHasMore(false);
-            }
-        } catch (error) {
-            console.error("Error fetching candidates:", error);
+            // console.log(response);
+            dispatch(setData({ pageKey: "candidate", data: users, append: page > 1 }));
+            dispatch(setPagination({ pageKey: "candidate", page: page + 1, hasMore: page < totalPages }));
+        } catch (err) {
+            console.error("Error:", err);
         } finally {
-            setLoading(false);
+            dispatch(setLoading({ pageKey: "candidate", loading: false }));
         }
     };
 
     useEffect(() => {
         fetchCandidate();
-    }, [])
+    }, [status, position]);
+
+
+    const handleStatusChange = (value, label) => {
+        dispatch(updateFilter({ pageKey: "candidate", key: label, value }));
+        dispatch(setPagination({ pageKey: "candidate", page: 1, hasMore: true }));
+        dispatch(setData({ pageKey: "candidate", data: [] }));
+    };
+
+    const debouncedSearch = useCallback(
+        debounce((val) => {
+            dispatch(setPagination({ pageKey: "candidate", page: 1, hasMore: true }));
+            dispatch(setData({ pageKey: "candidate", data: [] }));
+            fetchCandidate(val);
+        }, 500), []
+    );
+
+    const onSearchHandler = (e) => {
+        const val = e.target.value;
+        dispatch(updateFilter({ pageKey: "candidate", key: 'search', value: val }));
+        if (val.trim() === "") return;
+        debouncedSearch(val);
+    };
+
+    const updateStatusHandler = async (candidateId, status) => {
+        await Services.CandidateOperation.updateCandidateStatus({ candidateId, status }, accessToken);
+    }
+
+    const handleDownloadResume = (candidate) => {
+        const resumeUrl = candidate?.resumeUrl;
+        if (resumeUrl) {
+            const fileName = resumeUrl.split('/').pop().split('?')[0];
+            const link = document.createElement('a');
+            link.href = resumeUrl;
+            link.setAttribute('download', fileName); // This may be ignored by some servers
+            link.setAttribute('target', '_blank');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } else {
+            toast.error("Resume not found");
+        }
+    };
+
+    const handleDeleteCandidate = async (candidate) => {
+        if (!candidate?._id) return;
+        try {
+            await Services.CandidateOperation.deleteCandidate(candidate._id, accessToken);
+            dispatch(removeItem({ pageKey: 'candidate', id: candidate._id }));
+        } catch (error) {
+            console.error("Error deleting candidate:", error);
+        }
+    };
+
+    const actionsData = [
+        { title: "Download Resume", handler: handleDownloadResume },
+        { title: "Delete Candidate", handler: handleDeleteCandidate },
+    ]
 
     const openDialog = () => setOpen(true);
     const closeDialog = () => setOpen(false);
+
+    const addCandidateSubmitHandler = async (candidatedata, setFormLoading) => {
+        try {
+            setFormLoading(true);
+
+            const formData = new FormData();
+            formData.append('fullName', candidatedata.fullName);
+            formData.append('email', candidatedata.email);
+            formData.append('phone', candidatedata.phone);
+            formData.append('resume', candidatedata.resume);
+            formData.append('position', candidatedata.position);
+            formData.append('experience', candidatedata.experience);
+
+            const response = await Services.CandidateOperation.addCandidate(formData, accessToken);
+
+            if (response?.data) {
+                const newCandidate = response.data;
+                const currentData = data;
+                const updatedData = [newCandidate, ...currentData];
+                dispatch(setData({ pageKey: "candidate", data: updatedData }));
+                closeDialog();
+            }
+        } catch (err) {
+            console.error("Error creating candidate:", err);
+        } finally {
+            setFormLoading(false);
+        }
+    };
 
     return (
         <>
             <div className="toolbar-container">
                 <div className='toolbar-left'>
-                    <CustomDropdown data={newFilterToolbar} />
-                    <CustomDropdown data={positionFilterToolbar} extraStyles={{ "width": "180px" }} />
+                    <CustomDropdown data={candidateFilterStatus} handleStatusChange={handleStatusChange} label="Status" />
+                    <CustomDropdown data={candidateFilterpostion} handleStatusChange={handleStatusChange} extraStyles={{ "width": "180px" }} label="Position" />
                 </div>
                 <div className='toolbar-right'>
                     <div className="search-bar">
                         <MdSearch className="search-icon" />
-                        <input type="text" placeholder="Search" />
+                        <input type="text" value={search} placeholder="Search" onChange={onSearchHandler} />
                     </div>
 
                     <button className="add-btn" onClick={openDialog}>Add Candidate</button>
@@ -184,19 +155,22 @@ const Candidates = () => {
             </div>
             <DynamicTable
                 data={data}
-                columns={candidateColumns}
-                onDownloadResume={handleDownloadResume}
-                onDeleteCandidate={handleDeleteCandidate}
+                columns={candidateTableColumn}
                 onScrollEnd={fetchCandidate}
                 loading={loading}
                 hasMore={hasMore}
+                dropDownHandler={updateStatusHandler}
+                actionsData={actionsData}
+                dropDownData={candidateStatus}
             />
 
             {open && <CustomDialogBox
-                edit={false}
+                title='Add New Candidate'
                 initialData={{}}
-                submitHandler={(data) => console.log("Submitted:", data)}
+                submitHandler={addCandidateSubmitHandler}
                 onClose={closeDialog}
+                fields={candidateFormFields}
+                confirmBox={true}
             />
             }
         </>

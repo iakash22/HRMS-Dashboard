@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import './style.css';
 import Logo from '../Logo';
-import { MdSearch } from 'react-icons/md';
-import { FaUsers, FaChartBar, FaPlaneDeparture, FaSignOutAlt } from 'react-icons/fa';
-import { HiOutlineUserAdd } from "react-icons/hi";
 import CustomPopup from '../../common/CustomPopup';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/reducers/slices/auth';
+import { UserAddIcon, UserIcon, AttendanceIcon, LeaveIcon, LogoutIcon, SearchIcon } from '../../../assets';
 
 const Sidebar = () => {
     const { pathname } = useLocation();
@@ -17,11 +15,11 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const navItems = [
-        { label: "Candidates", path : '/',  icon: <HiOutlineUserAdd />, section: "Recruitment" },
-        { label: "Employees", path : '/employees', icon: <FaUsers />, section: "Organization" },
-        { label: "Attendance", path : '/attendance', icon: <FaChartBar />, section: "Organization" },
-        { label: "Leaves", path : '/leaves', icon: <FaPlaneDeparture />, section: "Organization" },
-        { label: "Logout", icon: <FaSignOutAlt />, section: "Others", logout: true },
+        { label: "Candidates", path: '/', icon: <UserAddIcon />, section: "Recruitment" },
+        { label: "Employees", path: '/employees', icon: <UserIcon />, section: "Organization" },
+        { label: "Attendance", path: '/attendance', icon: <AttendanceIcon />, section: "Organization" },
+        { label: "Leaves", path: '/leaves', icon: <LeaveIcon />, section: "Organization" },
+        { label: "Logout", icon: <LogoutIcon />, section: "Others", logout: true },
     ];
 
     // console.log(active);
@@ -45,7 +43,7 @@ const Sidebar = () => {
                     />
                 </div>
                 <div className="search-bar">
-                    <MdSearch className="search-icon" />
+                    <SearchIcon className="search-icon" />
                     <input type="text" placeholder="Search" />
                 </div>
 
@@ -58,7 +56,7 @@ const Sidebar = () => {
                     >
                         <a href={item?.path}>
                             {active === item?.path && <div className="highlight-bar"></div>}
-                            <span className="icon">{item.icon}</span>
+                            <span className="bar-icon">{item.icon}</span>
                             <span className="label">{item.label}</span>
                         </a>
                     </div>
@@ -73,7 +71,7 @@ const Sidebar = () => {
                     >
                         <a href={item?.path}>
                             {active === item?.path && <div className="highlight-bar"></div>}
-                            <span className="icon">{item.icon}</span>
+                            <span className="bar-icon">{item.icon}</span>
                             <span className="label">{item.label}</span>
                         </a>
                     </div>
@@ -88,7 +86,7 @@ const Sidebar = () => {
                     >
                         <a>
                             {active === item.label && <div className="highlight-bar"></div>}
-                            <span className="icon">{item.icon}</span>
+                            <span className="bar-icon">{item.icon}</span>
                             <span className="label">{item.label}</span>
                         </a>
                     </div>

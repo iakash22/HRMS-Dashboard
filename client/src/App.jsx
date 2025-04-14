@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom'
 import { OpenRoutes, PrivateRoute } from './components/core/auth';
 import Loader from './components/common/Loader';
 import { useSelector } from 'react-redux';
+import SplashScreenLoader from './components/common/SplashLoader';
 // import Pages 
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -16,7 +17,7 @@ const App = () => {
   const { accessToken } = useSelector(state => state.auth);
   return (
     <>
-      <Suspense fallback={accessToken ? <Loader /> : <>Loading</>}>
+      <Suspense fallback={accessToken ? <Loader /> : <SplashScreenLoader />}>
         <Routes>
           <Route
             element={

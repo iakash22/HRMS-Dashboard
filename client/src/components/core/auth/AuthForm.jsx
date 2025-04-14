@@ -30,7 +30,7 @@ const AuthForm = ({ }) => {
         }
     };
     return (
-        <div className='authForm'>
+        <div className={`authForm ${pathname === "/register" ? "register" : "login"}`}>
             <h2>Welcome to Dashboard</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
 

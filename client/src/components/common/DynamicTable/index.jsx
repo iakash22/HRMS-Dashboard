@@ -2,19 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import './style.css';
 import CustomDropdown from '../CustomDropDown';
 import ActionMenuDots from '../ActionMenuDots';
+import { toUSFormat, formatDate } from '../../../utils/helper';
+import { DocumentIcon } from '../../../assets';
+import Loader from '../Loader';
 
-const statusStyles = {
-    New: 'status status-new',
-    Selected: 'status status-selected',
-    Rejected: 'status status-rejected',
-};
-
-const status = {
-
-}
-
-function DynamicTable({ data, columns, onScrollEnd, onDownloadResume, onDeleteCandidate, loading, hasMore }) {
-    const [openMenuIndex, setOpenMenuIndex] = useState(null);
+function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHandler, actionsData = [], dropDownData = [] }) {
     const [revealEnd, setRevealEnd] = useState(false);
 
     const tableRef = useRef();
@@ -22,9 +14,7 @@ function DynamicTable({ data, columns, onScrollEnd, onDownloadResume, onDeleteCa
     useEffect(() => {
         const handleScroll = () => {
             if (!tableRef.current) return;
-
             const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
-
             if (scrollTop + clientHeight >= scrollHeight - 100) {
                 onScrollEnd(); // call when reached near bottom
             }
@@ -69,10 +59,6 @@ function DynamicTable({ data, columns, onScrollEnd, onDownloadResume, onDeleteCa
     }, [loading, hasMore]);
 
 
-    const toggleMenu = (index) => {
-        setOpenMenuIndex(openMenuIndex === index ? null : index);
-    };
-
     return (
         <div className="dynamic-table-container" ref={tableRef}>
             <table className="dynamic-table">
@@ -84,60 +70,70 @@ function DynamicTable({ data, columns, onScrollEnd, onDownloadResume, onDeleteCa
                     </tr>
                 </thead>
                 <tbody>
-                    {data.length === 0 ? (
-                        <tr>
-                            <td colSpan={columns.length} className="no-data-cell">
-                                No data available
-                            </td>
-                        </tr>
-                    ) : (
-                        data.map((row, rowIndex) => (
-                            <tr key={row?._id + rowIndex}>
-                                {columns.map((column) => (
-                                    <td key={column.key} data-label={column.label}>
-                                        {
-                                            column.key === "SrNo" ? (
-                                                String(rowIndex + 1).padStart(2, '0')
-                                            )
-                                                :
-                                                column.key == 'profile' ? (
-                                                    <img
-                                                        src={row?.profilePic}
-                                                        alt={`${row?.fullName}-Pic`}
-                                                        className="profile-icon"
-                                                    />
+                    {
+                        (!loading) && (!data || data.length === 0) ? (
+                            <tr>
+                                <td colSpan={columns.length} className="no-data-cell">
+                                    No data available
+                                </td>
+                            </tr>
+                        ) : (
+                            data.map((row, rowIndex) => (
+                                <tr key={row?._id + rowIndex}>
+                                    {columns.map((column) => (
+                                        <td key={column.key} data-label={column.label}>
+                                            {
+                                                column.key === 'SrNo' ? (
+                                                    String(rowIndex + 1).padStart(2, '0')
                                                 )
                                                     :
-                                                    column.key === 'Status' ? (
-                                                        <CustomDropdown options={statusStyles} />
-                                                    ) : column.key === 'Action' ? (
-                                                        <ActionMenuDots
-                                                            actions={[
-                                                                { title: "Download Resume", handler: () => alert("Downloading...") },
-                                                                { title: "Delete Candidate", handler: () => alert("Deleted!") },
-                                                            ]}
+                                                    column.key === 'profile' ? (
+                                                        <img
+                                                            style={{ width: "40px", height: "40px" }}
+                                                            src={row?.profilePic}
+                                                            alt={`${row?.fullName}-Pic`}
+                                                            className='profile-icon'
                                                         />
-                                                    ) : (
-                                                        row[column.key]
-                                                    )}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))
-                    )}
+                                                    )
+                                                        :
+                                                        column.key === 'phone' ? (toUSFormat(row.phone))
+                                                            :
+                                                            column.key === 'joiningDate' || column.key === 'date' ? (formatDate(row[column.key], 'dd/MM/yyyy'))
+                                                                :
+                                                                column.key === 'Status' ? (<CustomDropdown data={dropDownData} value={row?.status || row?.attendance} handleStatusChange={(selectedStatus) => dropDownHandler(row?._id, selectedStatus)} />)
+                                                                    :
+                                                                    column.key === 'task' ? (row.task.length <= 0 ? "--" : row.task)
+                                                                        :
+                                                                        column.key === 'docs' ? (<span className={`docs-icon ${row?.docsUrl ? "" : "no-docs"}`}><DocumentIcon /></span>)
+                                                                            :
+                                                                            column.key === 'Action' ? (
+                                                                                <ActionMenuDots
+                                                                                    actions={actionsData.map(action => ({
+                                                                                        title: action.title,
+                                                                                        handler: () => action.handler(row)
+                                                                                    }))}
+                                                                                />
+                                                                            ) : (
+                                                                                row[column.key]
+                                                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        )}
                 </tbody>
 
             </table>
-            <div style={{ height: '80px', display: revealEnd ? "none" : "block" }} />
+            {/* <div style={{ height: '80px', display: revealEnd ? "none" : "block" }} /> */}
 
             <div className="scroll-loader-footer">
-                {hasMore ? (
-                    loading && <div className="loader">Loading...</div>
-                ) : (
-                    <div className={`end-reveal ${revealEnd ? 'visible' : ''}`}>
-                        🎉 You’ve reached the end
-                    </div>
-                )}
+                {
+                    hasMore && loading && <Loader  circleStyles={{width : "8px", height : "8px",}}/>
+                }
+                {!hasMore && <div className={`end-reveal ${revealEnd ? 'visible' : ''}`}>
+                    🎉 You’ve reached the end
+                </div>
+                }
             </div>
         </div>
     );

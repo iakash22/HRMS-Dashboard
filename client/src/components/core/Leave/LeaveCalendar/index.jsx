@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import "./style.css";
 
-const LeaveCalendar = () => {
+const LeaveCalendar = ({ dateLeaveHandler, leaveCounts }) => {
     const today = new Date();
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    
+    const leaveMap = new Map(
+        leaveCounts.map(item => [
+            new Date(item.date).toDateString(),
+            item.count
+        ])
+    );
 
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
@@ -21,15 +28,11 @@ const LeaveCalendar = () => {
         setCurrentDate(next);
     };
 
-    const handleDateClick = (date) => {
+    const handleDateClick = async (date) => {
         if (date.getMonth() !== currentDate.getMonth()) return;
         setSelectedDate(date);
         console.log("Clicked date:", date.toISOString().split("T")[0]);
-
-        // 🔥 API call example
-        // fetch(`/api/leave?date=${date.toISOString().split("T")[0]}`)
-        //   .then(res => res.json())
-        //   .then(data => console.log("Leave data:", data));
+        await dateLeaveHandler(date);
     };
 
     const generateCalendarDays = () => {
@@ -97,6 +100,8 @@ const LeaveCalendar = () => {
                         currentDate.getFullYear() === today.getFullYear() &&
                         date.getDate() < today.getDate();
 
+                    const leaveCountForDay = leaveMap.get(date.toDateString());
+
                     return (
                         <div
                             key={idx}
@@ -108,6 +113,9 @@ const LeaveCalendar = () => {
                             onClick={() => handleDateClick(date)}
                         >
                             {date.getDate()}
+                            {leaveCountForDay && (
+                                <span className="leave-count-badge">{leaveCountForDay}</span>
+                            )}
                         </div>
                     );
                 })}

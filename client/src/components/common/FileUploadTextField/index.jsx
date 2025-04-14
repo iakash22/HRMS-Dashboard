@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './style.css';
-import { FiUpload, FiX } from 'react-icons/fi';
+import { CrossIcon } from '../../../assets';
 
 const FileUploadField = ({
     name,
@@ -10,6 +10,7 @@ const FileUploadField = ({
     error,
     setValue,
     clearErrors,
+    Icon
 }) => {
     const inputRef = useRef();
     const [fileName, setFileName] = useState('');
@@ -53,10 +54,10 @@ const FileUploadField = ({
                     {fileName ? (
                         <>
                             <span className="file-name">{fileName}</span>
-                            <FiX className="icon" onClick={handleClearFile} />
+                            <CrossIcon className="icon" onClick={handleClearFile} />
                         </>
                     ) : (
-                        <FiUpload className="icon upload" />
+                        <Icon className="icon upload" />
                     )}
                 </div>
             </div>
