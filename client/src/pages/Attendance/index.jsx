@@ -11,8 +11,9 @@ import { setData, setLoading, setPagination, updateFilter } from '../../redux/re
 import { debounce } from '../../utils/optimizers';
 import { attendanceTableColumn } from '../../constant/tableColumnData'
 import { attendanceFilterStatus, attendanceStatus } from '../../constant/filterAndDropDownData'
+import SearchBar from '../../components/common/SearchBar';
 
-const Attendance = () => {
+const Attendance = ({ isSidebarOpen }) => {
     const { page, pageSize, status, search, hasMore, loading, data } = useSelector((state) => state.table.attendance);
     const { accessToken } = useSelector(state => state.auth);
     const dispatch = useDispatch();
@@ -71,16 +72,17 @@ const Attendance = () => {
     }
 
     return (
-        <>
-            <div className="toolbar-container">
+        <div className={`container attendance ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+            <div className='toolbar-container'>
                 <div className='toolbar-left'>
                     <CustomDropdown data={attendanceFilterStatus} handleStatusChange={handleStatusChange} label="Status" extraStyles={{ width: "190px" }} />
                 </div>
                 <div className='toolbar-right'>
-                    <div className="search-bar">
-                        <MdSearch className="search-icon" />
-                        <input type="text" placeholder="Search" value={search} onChange={onSearchHandler} />
-                    </div>
+                    <SearchBar
+                        value={search}
+                        onChange={onSearchHandler}
+                        placeholder="Search"
+                    />
                 </div>
             </div>
 
@@ -93,7 +95,7 @@ const Attendance = () => {
                 dropDownData={attendanceStatus}
                 dropDownHandler={updateStatusHandler}
             />
-        </>
+        </div>
     )
 }
 

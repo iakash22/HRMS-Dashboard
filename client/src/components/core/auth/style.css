@@ -53,10 +53,6 @@ input::placeholder {
     font-family: "Nunito", sans-serif;
 }
 
-input:focus {
-    border-color: var(--voilet-color);
-}
-
 .error {
     align-self: flex-end;
     margin-top: -6px;

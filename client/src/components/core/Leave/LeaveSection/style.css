@@ -7,6 +7,11 @@
     box-shadow: 0px 4px 10px 0px #12121233;
     font-family: 'Nunito', sans-serif;
     overflow: hidden;
+    max-height: calc(100vh - 160px);
+    min-height: calc(100vh - 155px);
+
+    display: flex;
+    flex-direction: column;
 }
 
 .calendar-header-title {
@@ -14,27 +19,35 @@
     color: white;
     font-weight: 400;
     font-size: 16px;
-    padding: 16px 16px;
+    padding: 13px 16px;
     font-family: 'Nunito', sans-serif;
 }
 
 .approved-leaves {
     padding: 16px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: 1px;
+    flex-grow: 1;
+}
+
+.approved-leaves::-webkit-scrollbar {
+    width: 1px;
 }
 
 .approved-leaves h4 {
     color: var(--voilet-color);
     font-weight: 600;
     font-size: 14px;
-    margin-bottom: 12px;
+    margin-bottom: 0px;
+    margin-top: -5px;
 }
 
 .leave-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--grey-color);
+    padding: 8px 0;
 }
 
 .leave-item:last-child {
@@ -56,7 +69,7 @@
 .name {
     font-weight: 600;
     font-size: 14px;
-    color: #222;
+    color: var(--black-color);
 }
 
 .position {

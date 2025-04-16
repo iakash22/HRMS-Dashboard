@@ -1,23 +1,24 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import AppLayout from '../../components/layouts/AppLayout'
-import './style.css';
-import CustomDropdown from '../../components/common/CustomDropDown';
-import { MdSearch } from 'react-icons/md';
-import DynamicTable from '../../components/common/DynamicTable';
-import LeaveSection from '../../components/core/Leave/LeaveSection';
-import Services from '../../services/operations';
-import { leaveEndPoints } from '../../services/api';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setData, setPagination, setLoading, updateFilter } from '../../redux/reducers/slices/table';
-import { debounce } from '../../utils/optimizers';
+import { CalendarIcon } from '../../assets';
+import ActionButton from '../../components/common/ActionButton';
 import CustomDialogBox from '../../components/common/CustomDialogBox';
-import { leaveFormFields } from '../../constant/formFieldsData'
-import { leaveTableColumn } from '../../constant/tableColumnData'
-import { leaveFilterStatus, leaveStatus } from '../../constant/filterAndDropDownData'
+import CustomDropdown from '../../components/common/CustomDropDown';
+import DynamicTable from '../../components/common/DynamicTable';
+import SearchBar from '../../components/common/SearchBar';
+import LeaveSection from '../../components/core/Leave/LeaveSection';
+import AppLayout from '../../components/layouts/AppLayout';
+import { leaveFilterStatus, leaveStatus } from '../../constant/filterAndDropDownData';
+import { leaveFormFields } from '../../constant/formFieldsData';
+import { leaveTableColumn } from '../../constant/tableColumnData';
+import { setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
+import { leaveEndPoints } from '../../services/api';
+import Services from '../../services/operations';
+import { debounce } from '../../utils/optimizers';
+import './style.css';
 
-// const leaveStatus = ["Status", "Pending", "Approved", "Rejected"];
-
-const Leaves = () => {
+const Leaves = ({ isSidebarOpen }) => {
+    const [calendarIsOpen, setCalendarIsOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const [leaveCounts, setLeaveCounts] = useState([]);
     const { page, pageSize, status, search, hasMore, loading, data } = useSelector((state) => state.table.leave);
@@ -108,6 +109,10 @@ const Leaves = () => {
             const response = await Services.LeaveOperation.applyForLeave(formData, accessToken);
 
             if (response?.data) {
+                const newLeave = response.data;
+                const currentData = data;
+                const updateddata = [newLeave, ...currentData];
+                dispatch(setData({ pageKey: "leave", data: updateddata }));
                 closeDialog();
             }
         } catch (err) {
@@ -118,23 +123,30 @@ const Leaves = () => {
     }
 
     return (
-        <>
+        <div className={`container leaves ${isSidebarOpen ? 'sidebar-open' : ''}`}>
             <div className="toolbar-container">
                 <div className='toolbar-left'>
                     <CustomDropdown data={leaveFilterStatus} handleStatusChange={handleStatusChange} label='Status' />
+                    <button className='calendar-btn' onClick={() => setCalendarIsOpen(prev => !prev)}>
+                        <span>Leaves</span>
+                        <CalendarIcon />
+                    </button>
                 </div>
                 <div className='toolbar-right'>
-                    <div className="search-bar">
-                        <MdSearch className="search-icon" />
-                        <input type="text" placeholder="Search" value={search} onChange={onSearchHandler} />
-                    </div>
-
-                    <button className="add-btn" onClick={openDialog}>Add Leave</button>
+                    <SearchBar
+                        value={search}
+                        onChange={onSearchHandler}
+                        placeholder="Search"
+                    />
+                    <ActionButton
+                        text="Add Leave"
+                        onClick={openDialog}
+                    />
                 </div>
             </div>
 
             <div className="leave-page-container">
-                <div style={{ width: "70%" }}>
+                <div className='leave-table-container'>
                     <DynamicTable
                         data={data}
                         columns={leaveTableColumn}
@@ -146,8 +158,7 @@ const Leaves = () => {
                     />
                 </div>
 
-                <div style={{ width: "30%" }}>
-                    {/* <LeaveCalendar leaves={dummyLeaves} /> */}
+                <div className={`calendar-container ${calendarIsOpen ? "open" : "close"}`}>
                     <LeaveSection leaveCounts={leaveCounts} />
                 </div>
             </div>
@@ -160,7 +171,7 @@ const Leaves = () => {
                 fields={leaveFormFields}
                 confirmBox={false}
             />}
-        </>
+        </div>
     )
 }
 

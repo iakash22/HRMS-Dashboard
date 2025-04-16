@@ -5,6 +5,7 @@ import ActionMenuDots from '../ActionMenuDots';
 import { toUSFormat, formatDate } from '../../../utils/helper';
 import { DocumentIcon } from '../../../assets';
 import Loader from '../Loader';
+import toast from 'react-hot-toast';
 
 function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHandler, actionsData = [], dropDownData = [] }) {
     const [revealEnd, setRevealEnd] = useState(false);
@@ -16,7 +17,7 @@ function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHa
             if (!tableRef.current) return;
             const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
             if (scrollTop + clientHeight >= scrollHeight - 100) {
-                onScrollEnd(); // call when reached near bottom
+                onScrollEnd();
             }
         };
 
@@ -41,10 +42,8 @@ function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHa
             const offsetFromBottom = scrollHeight - scrollTop - clientHeight;
 
             if (offsetFromBottom <= 20) {
-                // console.log("if")
                 setRevealEnd(true);
             } else {
-                // console.log("else")
                 setRevealEnd(false);
             }
 
@@ -58,12 +57,27 @@ function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHa
         };
     }, [loading, hasMore]);
 
+    const handleDownloadDocument = (docsUrl) => {
+        if (docsUrl) {
+            const fileName = docsUrl.split('/').pop().split('?')[0];
+            const link = document.createElement('a');
+            link.href = docsUrl;
+            link.setAttribute('download', fileName);
+            link.setAttribute('target', '_blank');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } else {
+            toast.error('Document not found');
+        }
+    };
+
 
     return (
         <div className="dynamic-table-container" ref={tableRef}>
             <table className="dynamic-table">
                 <thead>
-                    <tr>
+                    <tr style={{ backgroundColor: "#4D007D" }}>
                         {columns.map((column) => (
                             <th key={column.key}>{column.label}</th>
                         ))}
@@ -89,33 +103,35 @@ function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHa
                                                     :
                                                     column.key === 'profile' ? (
                                                         <img
-                                                            style={{ width: "40px", height: "40px" }}
+                                                            // style={{ width: "40px", height: "40px" }}
                                                             src={row?.profilePic}
                                                             alt={`${row?.fullName}-Pic`}
-                                                            className='profile-icon'
+                                                            className='table-profile-icon'
                                                         />
                                                     )
                                                         :
                                                         column.key === 'phone' ? (toUSFormat(row.phone))
                                                             :
-                                                            column.key === 'joiningDate' || column.key === 'date' ? (formatDate(row[column.key], 'dd/MM/yyyy'))
+                                                            column.key === 'experience' ? (row.experience.includes(".") ? row?.experience[0] + "+" : row.experience)
                                                                 :
-                                                                column.key === 'Status' ? (<CustomDropdown data={dropDownData} value={row?.status || row?.attendance} handleStatusChange={(selectedStatus) => dropDownHandler(row?._id, selectedStatus)} />)
+                                                                column.key === 'joiningDate' || column.key === 'date' ? (formatDate(row[column.key], 'dd/MM/yyyy'))
                                                                     :
-                                                                    column.key === 'task' ? (row.task.length <= 0 ? "--" : row.task)
+                                                                    column.key === 'Status' ? (<CustomDropdown data={dropDownData} value={row?.status || row?.attendance} handleStatusChange={(selectedStatus) => dropDownHandler(row?._id, selectedStatus)} extraStyles={{ width: "132px" }} zIndex='9' />)
                                                                         :
-                                                                        column.key === 'docs' ? (<span className={`docs-icon ${row?.docsUrl ? "" : "no-docs"}`}><DocumentIcon /></span>)
+                                                                        column.key === 'task' ? (row.task.length <= 0 ? "--" : row.task)
                                                                             :
-                                                                            column.key === 'Action' ? (
-                                                                                <ActionMenuDots
-                                                                                    actions={actionsData.map(action => ({
-                                                                                        title: action.title,
-                                                                                        handler: () => action.handler(row)
-                                                                                    }))}
-                                                                                />
-                                                                            ) : (
-                                                                                row[column.key]
-                                                                            )}
+                                                                            column.key === 'docs' ? (<span className={`docs-icon ${row?.docsUrl ? "" : "no-docs"}`} onClick={() => row?.docsUrl ? handleDownloadDocument(row?.docsUrl) : ""}><DocumentIcon /></span>)
+                                                                                :
+                                                                                column.key === 'Action' ? (
+                                                                                    <ActionMenuDots
+                                                                                        actions={actionsData.map(action => ({
+                                                                                            title: action.title,
+                                                                                            handler: () => action.handler(row)
+                                                                                        }))}
+                                                                                    />
+                                                                                ) : (
+                                                                                    row[column.key]
+                                                                                )}
                                         </td>
                                     ))}
                                 </tr>
@@ -128,7 +144,7 @@ function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHa
 
             <div className="scroll-loader-footer">
                 {
-                    hasMore && loading && <Loader  circleStyles={{width : "8px", height : "8px",}}/>
+                    hasMore && loading && <Loader circleStyles={{ width: "8px", height: "8px", }} />
                 }
                 {!hasMore && <div className={`end-reveal ${revealEnd ? 'visible' : ''}`}>
                     🎉 You’ve reached the end

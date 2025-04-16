@@ -1,23 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import AppLayout from '../../components/layouts/AppLayout'
-import './style.css';
-import CustomDropdown from '../../components/common/CustomDropDown';
-import { MdSearch } from 'react-icons/md';
-import DynamicTable from '../../components/common/DynamicTable';
-import Services from '../../services/operations';
-import { employeeEndPoints } from '../../services/api';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeItem, setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
-import { debounce } from '../../utils/optimizers';
+import React, { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomDialogBox from '../../components/common/CustomDialogBox';
-import { editEmploeeFormFields } from '../../constant/formFieldsData'
-import { employeeTableColumn } from '../../constant/tableColumnData'
-import { employeeFilterPosition } from '../../constant/filterAndDropDownData'
+import CustomDropdown from '../../components/common/CustomDropDown';
+import DynamicTable from '../../components/common/DynamicTable';
+import SearchBar from '../../components/common/SearchBar';
+import AppLayout from '../../components/layouts/AppLayout';
+import { employeeFilterPosition } from '../../constant/filterAndDropDownData';
+import { editEmploeeFormFields } from '../../constant/formFieldsData';
+import { employeeTableColumn } from '../../constant/tableColumnData';
+import { removeItem, setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
+import { employeeEndPoints } from '../../services/api';
+import Services from '../../services/operations';
+import { debounce } from '../../utils/optimizers';
+import './style.css';
 
-const positions = ["Position", "Intern", "Full Time", "Senior", "Junior"];
-
-const Employees = () => {
+const Employees = ({isSidebarOpen}) => {
     const [open, setOpen] = useState(false);
     const [editData, setEditData] = useState({});
     const { page, pageSize, position, search, hasMore, loading, data } = useSelector((state) => state.table.employee);
@@ -133,16 +131,17 @@ const Employees = () => {
     ]
 
     return (
-        <>
+        <div className={`container employee ${isSidebarOpen ? 'sidebar-open' : ''}`}>
             <div className="toolbar-container">
                 <div className='toolbar-left'>
                     <CustomDropdown data={employeeFilterPosition} label='Position' handleStatusChange={handleStatusChange} />
                 </div>
                 <div className='toolbar-right'>
-                    <div className="search-bar">
-                        <MdSearch className="search-icon" />
-                        <input type="text" placeholder="Search" name='search' value={search} onChange={onSearchHandler} />
-                    </div>
+                    <SearchBar
+                        value={search}
+                        onChange={onSearchHandler}
+                        placeholder="Search"
+                    />
                 </div>
             </div>
 
@@ -164,7 +163,7 @@ const Employees = () => {
                 confirmBox={false}
             />
             }
-        </>
+        </div>
     )
 }
 

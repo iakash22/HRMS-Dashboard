@@ -36,15 +36,12 @@
     color: var(--black-color);
     pointer-events: none;
     transition: all 0.2s ease;
+    font-size: 14px;
     font-family: 'Nunito', sans-serif;
 }
 
 .textfield-wrapper input:focus+label,
-.textfield-wrapper input:not(:placeholder-shown)+label,
-.date-picker-input:focus+label,
-.date-picker-input.filled+label,
-.textfield-wrapper select.dropdown-input.filled+label,
-.textfield-wrapper select.dropdown-input:focus+label {
+.textfield-wrapper input:not(:placeholder-shown)+label {
     top: -0.1rem;
     left: 0.75rem;
     font-size: 14px;
@@ -53,40 +50,11 @@
     font-family: 'Nunito', sans-serif;
 }
 
-/* Style for select dropdown */
-.textfield-wrapper select.dropdown-input {
-    appearance: none;
-    /* Remove default arrow */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background: var(--white-color);
-    border: none;
-    font-size: 18px;
-    padding: 0.15rem 0;
-    width: 100%;
-    font-family: 'Nunito', sans-serif;
-    color: var(--black-color);
-    cursor: pointer;
-}
-
-.textfield-wrapper select.dropdown-input:focus {
-    outline: none;
-}
-
-/* Optional: adjust padding so arrow doesn't overlap text */
-.textfield-wrapper select.dropdown-input {
-    padding-right: 2rem;
-}
-
-/* Error state */
-.textfield-wrapper.error select.dropdown-input {
-    border-color: var(--red-color);
-}
-
-
 .textfield-wrapper .textfield-icon {
     margin-left: auto;
     color: var(--voilet-color);
+    width: 20px;
+    height: 20px;
 }
 
 .required {
@@ -102,6 +70,27 @@
 
 .textfield-wrapper.error {
     border-color: var(--red-color);
+}
+
+.floating-label {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--white-color);
+    padding: 0 0.25rem;
+    color: var(--black-color);
+    pointer-events: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.floating-label.active {
+    top: -0.1rem;
+    left: 0.75rem;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--voilet-color);
 }
 
 .datepicker-wrapper {
@@ -219,4 +208,25 @@ h2.react-datepicker__current-month {
 .react-datepicker__day--today {
     font-weight: bold;
     color: var(--black-color);
+}
+
+@media (max-width : 480px) {
+
+    .textfield-wrapper input,
+    .date-picker-input {
+        font-size: 14px;
+    }
+
+    .textfield-wrapper label,
+    .floating-label,
+    .floating-label.active {
+        font-size: 12px;
+    }
+
+    .textfield-wrapper input:focus+label,
+    .textfield-wrapper input:not(:placeholder-shown)+label,
+    .date-picker-input:focus+label,
+    .date-picker-input.filled+label {
+        font-size: 12px;
+    }
 }

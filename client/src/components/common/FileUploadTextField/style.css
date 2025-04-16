@@ -1,7 +1,7 @@
 .file-upload-field {
     margin-bottom: 1rem;
     position: relative;
-    /* margin-top: -7px; */
+    /* overflow: hidden; */
 }
 
 .file-upload-wrapper {
@@ -14,6 +14,8 @@
     cursor: pointer;
     transition: border 0.2s ease;
     background: var(--white-color);
+    min-width: 0;
+    position: relative;
 }
 
 .file-upload-wrapper.error {
@@ -27,12 +29,16 @@
 .file-label {
     position: absolute;
     left: 16px;
-    top: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--black-color);
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'Nunito', sans-serif;
     pointer-events: none;
     transition: all 0.2s ease;
+    z-index: 2;
+    background: var(--white-color);
+    padding: 0 4px;
 }
 
 .file-label .required {
@@ -42,17 +48,18 @@
 
 .file-upload-wrapper.has-file .file-label,
 .file-label.float {
-    top: -8px;
+    top: -10px;
+    transform: translateY(0);
     left: 12px;
+    font-size: 14px;
     background: var(--white-color);
     padding: 0 4px;
-    font-size: 14px;
-    font-family: 'Nunito', sans-serif;
+    z-index: 2;
 }
 
 .file-input {
     position: absolute;
-    width: 70%;
+    width: 50%;
     height: 100%;
     opacity: 0;
     cursor: pointer;
@@ -63,6 +70,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .file-name {
@@ -71,7 +81,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: calc(100% - 24px);
+    max-width: 80%;
     font-family: 'Nunito', sans-serif;
 }
 
@@ -80,6 +90,9 @@
     color: var(--voilet-color);
     cursor: pointer;
     flex-shrink: 0;
+    margin-left: 8px;
+    width: 20px;
+    height: 20px;
 }
 
 .icon.upload {
@@ -90,4 +103,20 @@
     color: var(--red-color);
     font-size: 0.75rem;
     margin-top: 4px;
+}
+
+@media (max-width : 480px) {
+
+    .file-name {
+        font-size: 14px;
+    }
+
+    .file-label  {
+        font-size: 12px;
+    }
+
+    .file-upload-wrapper.has-file .file-label,
+    .file-label.float {
+        font-size: 12px;
+    }
 }

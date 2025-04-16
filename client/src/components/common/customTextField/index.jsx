@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.css';
+import CustomDropdownInputField from '../CustomDropdownInputField';
 
 const CustomTextField = ({
     label,
@@ -19,6 +20,8 @@ const CustomTextField = ({
     options = [], // ✅ options for dropdown
 }) => {
     const value = watch(name);
+    const [isFocused, setIsFocused] = useState(false);
+    const shouldFloatLabel = isFocused || !!value;
 
     const getValidationRules = () => {
         const rules = {};
@@ -59,44 +62,36 @@ const CustomTextField = ({
             <div className={`textfield-wrapper ${error ? 'error' : ''}`}>
                 {type === 'date' ? (
                     <>
-                        <DatePicker
-                            selected={value ? new Date(value) : null}
-                            onChange={(date) => {
-                                setValue(name, date, { shouldValidate: true, shouldDirty: true });
-                                onChange?.({ target: { value: date } });
-                            }}
-                            dateFormat="dd/MM/yy"
-                            className={`date-picker-input ${value ? 'filled' : ''}`}
-                            calendarClassName="custom-datepicker-calendar"
-                            placeholderText=" "
-                            wrapperClassName="datepicker-wrapper"
-                            minDate={new Date(value) || new Date()}
-                        />
-                        <input
-                            type="hidden"
-                            {...validation}
-                            value={value || ''}
-                            readOnly
-                        />
+                        <div className="datepicker-wrapper">
+                            <DatePicker
+                                selected={value ? new Date(value) : null}
+                                onChange={(date) => {
+                                    setValue(name, date, { shouldValidate: true, shouldDirty: true });
+                                    onChange?.({ target: { value: date } });
+                                }}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
+                                dateFormat="dd/MM/yy"
+                                className="date-picker-input"
+                                calendarClassName="custom-datepicker-calendar"
+                                placeholderText=""
+                                minDate={new Date()}
+                            />
+                            <input
+                                type="hidden"
+                                {...validation}
+                                value={value || ''}
+                                readOnly
+                            />
+                        </div>
+                        <label
+                            className={`floating-label ${shouldFloatLabel ? 'active' : ''}`}
+                            htmlFor={name}
+                        >
+                            {label}
+                            {required && <span className="required">*</span>}
+                        </label>
                     </>
-                ) : type === 'dropdown' ? (
-                    <select
-                        id={name}
-                        {...validation}
-                        value={value || ''}
-                        onChange={(e) => {
-                            validation.onChange(e);
-                            onChange?.(e);
-                        }}
-                        className={`dropdown-input ${value ? 'filled' : ''}`}
-                    >
-                        <option value="" disabled hidden> </option>
-                        {options.map((option, idx) => (
-                            <option key={idx} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </select>
                 ) : (
                     <input
                         id={name}
@@ -111,10 +106,11 @@ const CustomTextField = ({
                         placeholder=" "
                     />
                 )}
-                <label htmlFor={name}>
+                {type !== 'date' && <label htmlFor={name}>
                     {label}
                     {required && <span className="required">*</span>}
                 </label>
+                }
                 {Icon && <span className="textfield-icon"><Icon /></span>}
             </div>
             {error && <span className="error-msg">{error.message}</span>}

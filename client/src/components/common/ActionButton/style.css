@@ -1,0 +1,23 @@
+.action-btn {
+    padding: 8px 40px;
+    background-color: var(--voilet-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    max-width: 189px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Nunito', sans-serif;
+    transition: padding 0.2s, font-size 0.2s;
+}
+
+.action-btn:disabled {
+    background-color: var(--grey-color);
+    cursor: not-allowed;
+}
+
+.action-btn:hover:not(:disabled) {
+    background-color: var(--voilet-color);
+}

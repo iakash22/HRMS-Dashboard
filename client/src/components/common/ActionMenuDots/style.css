@@ -15,11 +15,11 @@
     justify-content: center;
 }
 
-.dot {
-    width: 4px;
-    height: 4px;
-    background-color: var(--black-color);
-    border-radius: 50%;
+.action-menu-button svg{
+    color: var(--black-color);
+    fill: var(--black-color);
+    width: 24px;
+    height: 24px;
 }
 
 .action-menu-popup {
@@ -31,7 +31,7 @@
     box-shadow: 0px 4px 10.1px 0px #12121233;
     min-width: 180px;
     padding: 8px 0;
-    z-index: 999;
+    z-index: 9;
     transition: all 0.2s ease;
 }
 

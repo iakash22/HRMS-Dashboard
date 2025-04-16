@@ -1,47 +1,68 @@
-import React, { useState } from 'react';
-import './style.css';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import './style.css';
 import { MailIcon, NotificationIcon, DropdownIcon } from '../../../assets';
+import { useSelector } from 'react-redux';
 
-function Topbar() {
+function Topbar({ isSidebarOpen }) {
     const [isOpen, setIsOpen] = useState(false);
+    const { user } = useSelector(state => state.auth);
     const { pathname } = useLocation();
-    const title = pathname.replace('/', '');
-    // const [dropUp, setDropUp] = useState(false);
-
-    console.log(isOpen)
+    const title = pathname.replace('/', '') || 'Candidates';
+    const dropdownRef = useRef(null);
+    const [activeItem, setActiveItem] = useState('');
 
     const toggleDropdown = () => {
-        // if (!isOpen) {
-        //     const rect = dropdownRef.current.getBoundingClientRect();
-        //     const spaceBelow = window.innerHeight - rect.bottom;
-        //     setDropUp(spaceBelow < 150);
-        // }
-        setIsOpen(!isOpen);
+        setIsOpen(prev => !prev);
     };
 
+    const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const menuItems = ['Edit Profile', 'Change Password', 'Manage Notification'];
+
     return (
-        <div className="topbar">
+        <div className={`topbar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
             <div className="left-section">
-                <h2>{title ? title : "Candidates"}</h2>
+                <h2>{title.charAt(0).toUpperCase() + title.slice(1)}</h2>
             </div>
             <div className="right-section">
                 <button className="icon-button">
-                    <p className='red-circle'></p>
+                    <span className="red-circle"></span>
                     <MailIcon />
                 </button>
                 <button className="icon-button">
-                    <p className='red-circle' style={{ right: "8px" }}></p>
+                    <span className="red-circle notification-circle"></span>
                     <NotificationIcon />
                 </button>
-                <div className="profile-info" onClick={toggleDropdown}>
+                <div className="profile-info" onClick={toggleDropdown} ref={dropdownRef}>
                     <img
-                        src="https://randomuser.me/api/portraits/women/44.jpg"
-                        alt="Profile"
+                        src={user?.profileUrl}
+                        alt={user?.fullName+" pic"}
                         className="profile-icon"
                     />
-                    <DropdownIcon className={`dropdown-icon ${isOpen ? "up" : "down"}`} />
+                    <DropdownIcon className={`dropdown-icon ${isOpen ? 'up' : 'down'}`} />
+                    <div className={`dropdown-card ${isOpen ? 'show' : ''}`}>
+                        {menuItems.map((item, index) => (
+                            <div
+                                key={index}
+                                className={`profile-dropdown-item ${activeItem === item ? 'active' : ''}`}
+                                onClick={() => setActiveItem(item)}
+                            >
+                                {item}
+                            </div>
+                        ))}
+                    </div>
                 </div>
+
             </div>
         </div>
     );

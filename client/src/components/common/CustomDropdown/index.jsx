@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, memo } from "react";
 import "./style.css";
 import { DropdownIcon } from '../../../assets'
 
-const CustomDropdown = ({ data, extraStyles, handleStatusChange, label = "", value }) => {
+const CustomDropdown = ({ data, extraStyles, handleStatusChange, label = "", value, zIndex = "100" }) => {
     const [isOpen, setIsOpen] = useState(false);
     const initialValue = data.find((val) => val.title === value);
     const [selected, setSelected] = useState(initialValue || data[0]);
@@ -43,8 +43,8 @@ const CustomDropdown = ({ data, extraStyles, handleStatusChange, label = "", val
                 <span className={`arrow ${isOpen ? "up" : "down"}`}><DropdownIcon /></span>
             </button>
             {isOpen && (
-                <div className={`dropdown-menu ${dropUp ? "drop-up" : ""}`}>
-                    {data.map((option,index) => (
+                <div className={`dropdown-menu ${dropUp ? "drop-up" : ""}`} style={{ zIndex }}>
+                    {data.map((option, index) => (
                         <div
                             key={index}
                             className={`dropdown-item ${selected?.title === option.title ? "selected" : ""}`}

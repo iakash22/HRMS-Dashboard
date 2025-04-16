@@ -26,7 +26,7 @@ export const employeeFilterPosition = [
     { title: "Position", color: "", default: true },
     { title: "Intern", color: "", default: null },
     { title: "Full Time", color: "", default: null },
-    { title: "Jonior", color: "", default: null },
+    { title: "Junior", color: "", default: null },
     { title: "Senior", color: "", default: null },
     { title: "Team Lead", color: "", default: null },
 ];

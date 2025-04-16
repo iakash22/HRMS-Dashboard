@@ -56,16 +56,12 @@
 .dialog-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
 .dialog-grid .form-group .input-wrapper {
     width: 300px;
     max-width: 100%;
-}
-
-.dialog-grid {
-    /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
-    gap: 20px;
 }
 
 .declaration {
@@ -148,3 +144,10 @@
     cursor: not-allowed;
 }
 
+@media (max-width : 520px){
+    .dialog-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+    }
+}

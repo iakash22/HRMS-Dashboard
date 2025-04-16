@@ -4,8 +4,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: "Nunito", sans-serif;
+    font-family: 'Nunito', sans-serif;
     margin-top: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    z-index: 100;
 }
 
 .left-section h2 {
@@ -14,7 +17,8 @@
     font-size: 20px;
     font-weight: 600;
     color: var(--black-color);
-    font-family: "Nunito", sans-serif;
+    font-family: 'Nunito', sans-serif;
+    white-space: nowrap;
 }
 
 .right-section {
@@ -45,6 +49,8 @@
     align-items: center;
     gap: 6px;
     margin-left: 10px;
+    cursor: pointer;
+    position: relative;
 }
 
 .profile-icon {
@@ -52,29 +58,220 @@
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    cursor: pointer;
 }
 
 .dropdown-icon {
     color: var(--voilet-color);
-    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    transition: transform 0.3s;
 }
 
-.red-circle{
+.dropdown-icon.up {
+    transform: rotate(180deg);
+}
+
+.red-circle {
     position: absolute;
     width: 8px;
     height: 8px;
     background-color: var(--red-color);
     border-radius: 50%;
     right: 4px;
-    top: 10px;
+    top: 4px;
 }
 
-.dropdown-icon {
-    margin-left: 8px;
-    transition: transform 0.2s;
+.notification-circle {
+    right: 8px;
 }
 
-.dropdown-icon.up {
-    transform: rotate(180deg);
+.dropdown-card {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: var(--white-color);
+    border-radius: 8px;
+    box-shadow: 0px 4px 10.1px 0px #12121233;
+    padding: 8px;
+    max-width: 250px;
+    width: fit-content;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 99;
+
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.dropdown-card.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.profile-dropdown-item {
+    font-size: 16px;
+    color: var(--black-color);
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.profile-dropdown-item:hover {
+    color: var(--voilet-color);
+}
+
+.profile-dropdown-item.active {
+    background-color: var(--white-color);
+    padding: 8px 20px;
+    border-radius: 100px;
+    box-shadow: 0px 0px 10px 0px #12121226;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .topbar {
+        padding: 8px 16px;
+        margin-top: 10px;
+    }
+
+    .left-section h2 {
+        font-size: 18px;
+        max-width: 40%;
+    }
+
+    .right-section {
+        gap: 12px;
+    }
+
+    .profile-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .dropdown-icon {
+        width: 14px;
+        height: 14px;
+        margin-left: 6px;
+    }
+
+    .red-circle {
+        width: 7px;
+        height: 7px;
+        right: 3px;
+        top: 3px;
+    }
+
+    .notification-circle {
+        right: 7px;
+    }
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        padding: 8px 12px;
+        /* Space for sidebar toggle button */
+        transition: margin-left 0.3s ease;
+    }
+
+    .topbar.sidebar-open {
+        margin-left: 0;
+        /* Adjust when sidebar is open */
+    }
+
+    .left-section h2 {
+        font-size: 16px;
+        max-width: 60%;
+        /* More space since sidebar is toggled */
+    }
+
+    .right-section {
+        gap: 10px;
+    }
+
+    .icon-button {
+        padding: 5px;
+    }
+
+    .profile-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .dropdown-icon {
+        width: 12px;
+        height: 12px;
+        margin-left: 5px;
+    }
+
+    .red-circle {
+        width: 6px;
+        height: 6px;
+        right: 2px;
+        top: 2px;
+    }
+
+    .notification-circle {
+        right: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        padding: 6px 10px;
+    }
+
+    .left-section h2 {
+        font-size: 16px;
+        max-width: 50%;
+        margin-left: 45px;
+    }
+
+    .right-section {
+        gap: 8px;
+    }
+
+    .icon-button {
+        padding: 4px;
+    }
+
+    .profile-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .dropdown-icon {
+        width: 10px;
+        height: 10px;
+        margin-left: 4px;
+    }
+
+    .red-circle {
+        width: 5px;
+        height: 5px;
+        right: 2px;
+        top: 2px;
+    }
+
+    .notification-circle {
+        right: 5px;
+    }
+
+    .dropdown-card {
+        right: -20px;
+        padding: 14px;
+    }
+
+    .profile-dropdown-item {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
 }

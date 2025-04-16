@@ -1,18 +1,27 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { debounce } from "../../../utils/optimizers";
 import "./style.css";
 import Services from '../../../services/operations';
 import { employeeEndPoints } from '../../../services/api';
 import { useSelector } from "react-redux";
+import { CrossIcon } from "../../../assets";
 
 const CustomSearchInputField = ({ register, setValue, error, required, Icon }) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isItemSelected, setIsItemSelected] = useState(false);
     const { accessToken } = useSelector(state => state.auth);
+    const searchInputRef = useRef(null);
 
     useEffect(() => {
+
+        if (isItemSelected) {
+            setIsItemSelected(false); // Reset the flag after handling selection
+            return; // Prevent API call after selection
+        }
+
         if (query && query.trim()) {
             debouncedSearch(query);
         } else {
@@ -47,44 +56,39 @@ const CustomSearchInputField = ({ register, setValue, error, required, Icon }) =
         setValue("fullName", employee?.fullName, { shouldValidate: true });
         setValue("designation", employee.designation, { shouldValidate: true });
         setValue("employeeId", employee.employeeId);
-        setQuery(employee.fullName); // Update query with selected name
+        setQuery(employee.fullName);
         setShowDropdown(false);
-    };
-
-    const handleCreateNew = () => {
-        setValue("fullName", query, { shouldValidate: true });
-        setValue("designation", "");
-        setShowDropdown(false);
+        setResults([]);
+        setIsItemSelected(true);
+        if (searchInputRef.current) {
+            searchInputRef.current.blur();
+        }
     };
 
     return (
-        <div className="employee-search-wrapper">
-            <div className={`search-input ${error ? 'error' : ''}`}>
+        <div className="search-container">
+            <div className={`search-bar ${error ? 'error' : ''}`}>
                 <Icon className="search-icon" />
                 <input
                     {...register("fullName", { required })}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search Employee Name"
+                    className="search-input"
                     onFocus={() => setShowDropdown(results.length > 0 && query.trim() !== '')}
-                // onBlur={() => setTimeout(() => setShowDropdown(false), 100)} // Add a slight delay to handle clicks on dropdown items
+                    ref={searchInputRef}
                 />
-                {query && (
-                    <button className="clear-btn" onClick={() => setQuery("")}>×</button>
-                )}
+                {query && (<CrossIcon className="clear-btn" onClick={() => setQuery("")} />)}
             </div>
 
             {showDropdown && (
                 <ul className="dropdown">
-                    {results.length > 0 ? results.map((emp, idx) => (
+                    {results.map((emp, idx) => (
                         <li key={idx} onClick={() => handleSelect(emp)}>
                             {emp.fullName}
                         </li>
-                    )) : (
-                        <li className="create-option" onClick={handleCreateNew}>
-                            Create new: <strong>{query}</strong>
-                        </li>
-                    )}
+                    ))
+                    }
                 </ul>
             )}
         </div>

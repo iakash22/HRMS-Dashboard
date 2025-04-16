@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
+import { MoreIcon } from '../../../assets'
 
 const ActionMenuDots = ({ actions = [] }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,7 @@ const ActionMenuDots = ({ actions = [] }) => {
         if (!isOpen) {
             const rect = menuRef.current.getBoundingClientRect();
             const spaceBelow = window.innerHeight - rect.bottom;
-            setDropUp(spaceBelow < 150); // threshold for menu height
+            setDropUp(spaceBelow < 150); 
         }
         setIsOpen((prev) => !prev);
     };
@@ -28,9 +29,7 @@ const ActionMenuDots = ({ actions = [] }) => {
     return (
         <div className="action-menu-container" ref={menuRef}>
             <button className="action-menu-button" onClick={toggleMenu}>
-                <span className="dot" />
-                <span className="dot" />
-                <span className="dot" />
+                <MoreIcon />
             </button>
 
             {isOpen && (

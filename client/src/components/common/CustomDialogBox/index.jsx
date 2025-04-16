@@ -6,6 +6,7 @@ import FileUploadField from "../FileUploadTextField";
 import { toUSFormat, toNormalFormat } from "../../../utils/helper";
 import CustomSearchInputField from "../CustomSearchInputField";
 import { CrossIcon } from '../../../assets';
+import CustomDropdownInputField from "../CustomDropdownInputField";
 
 const CustomDialogBox = ({
     title = "",
@@ -48,15 +49,13 @@ const CustomDialogBox = ({
         setValue('phone', formatted, { shouldValidate: true });
     };
 
-
-
     return (
         <div className="dialog-backdrop">
             <div className="dialog-box">
                 <div className="dialog-header">
                     <h3>{title}</h3>
                     <button className="close-btn" onClick={onClose}>
-                        <CrossIcon style={{color : "white"}} />
+                        <CrossIcon style={{ color: "white" }} />
                     </button>
                 </div>
 
@@ -87,22 +86,37 @@ const CustomDialogBox = ({
                                     />
                                 )
                                     :
-                                    (
-                                        <CustomTextField
+                                    type === 'dropdown' ? (
+                                        <CustomDropdownInputField
                                             key={idx}
-                                            name={name}
                                             label={label}
-                                            type={type}
-                                            Icon={icon}
-                                            register={register}
+                                            name={name}
                                             required={required}
                                             error={errors[name]}
-                                            watch={watch}
-                                            setValue={setValue}
                                             options={options}
-                                            onChange={name === "phone" ? handlePhoneChange : undefined}
+                                            register={register}
+                                            setValue={setValue}
+                                            watch={watch}
+                                            Icon={icon}
                                         />
                                     )
+                                        :
+                                        (
+                                            <CustomTextField
+                                                key={idx}
+                                                name={name}
+                                                label={label}
+                                                type={type}
+                                                Icon={icon}
+                                                register={register}
+                                                required={required}
+                                                error={errors[name]}
+                                                watch={watch}
+                                                setValue={setValue}
+                                                options={options}
+                                                onChange={name === "phone" ? handlePhoneChange : undefined}
+                                            />
+                                        )
                         )}
                     </div>
 
