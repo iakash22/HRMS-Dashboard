@@ -15,12 +15,12 @@ router.use(
 
 
 router.post('/apply',
-    middlewares.multerMiddlewares.singleFile,
+    middlewares.multerMiddlewares.singleDocs,
     validation.body(validators.leaveValidator.applyLeaveSchema),
     async (req, res) => {
         try {
             // console.log("resume file", req.file);
-            const data = await controllers.leaveControllers.applyLeave({ ...req.body, resume: req.file });
+            const data = await controllers.leaveControllers.applyLeave({ ...req.body, docs: req.file });
             return res.status(data.status).json(data);
         } catch (error) {
             console.error("Error Ocurred Occurred while apply leave route", error);
@@ -44,11 +44,11 @@ router.get(
 );
 
 router.get(
-    '/approvedLeaveCount',
-    // validation.body(validators.leaveValidator.updateLeaveStatusSchema),
+    '/approvedLeaves',
+    validation.query(validators.leaveValidator.approvedLeavesSchema),
     async (req, res) => {
         try {
-            const data = await controllers.leaveControllers.getLeaveCountsByDate(req.body);
+            const data = await controllers.leaveControllers.getLeaveCountsAndDataByDate(req.query);
             return res.status(data.status).json(data);
         } catch (error) {
             console.error("Error Ocurred Occurred while approved leave count route", error);

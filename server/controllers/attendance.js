@@ -1,5 +1,6 @@
 const errors = require('../constant/errors');
 const models = require('../models');
+const { faker } = require('@faker-js/faker');
 
 const getAndSearchAttendance = async (payload) => {
     try {
@@ -9,83 +10,136 @@ const getAndSearchAttendance = async (payload) => {
         const searchRegex = payload?.search ? new RegExp(payload.search, 'i') : null;
         const statusFilter = payload?.status || null;
 
-        // 🔹 Step 1: Base employee query
-        const employeeQuery = {
-            role: "Employee",
-            isDeleted: false,
-            status: { $in: ["Selected"] },
-        };
+        const whereClause = {};
 
         if (searchRegex) {
-            employeeQuery.$or = [
+            whereClause.$or = [
                 { fullName: searchRegex },
                 { email: searchRegex },
-                { position: searchRegex },
             ];
         }
-
-        const [employees, totalCount] = await Promise.all([
-            models.CandidateToEmployee.find(employeeQuery)
-                .select("fullName email position department profilePic")
-                .skip((page - 1) * pageSize)
-                .limit(pageSize)
-                .sort({ createdAt: -1 }),
-
-            models.CandidateToEmployee.countDocuments(employeeQuery),
-        ]);
-
-        const totalPages = Math.ceil(totalCount / pageSize);
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const employeeIds = employees.map((e) => e._id);
+        let data = null;
+        let totalPages = 0;
+        let totalCount = 0;
 
-        const [attendanceDocs, taskDocs] = await Promise.all([
-            models.Attendance.find({
-                employee: { $in: employeeIds },
-                date: today,
-                isDeleted: false,
-            }),
-            models.Task.find({
-                employee: { $in: employeeIds },
-                date: today,
-            }),
-        ]);
+        if (statusFilter && !searchRegex) {
+            const [attendanceDocs, totalAttendanceCount, taskDocs] = await Promise.all([
+                models.Attendance.find({
+                    status: statusFilter,
+                    date: today,
+                    isDeleted: false
+                }).populate("employee", "fullName email position department profilePic")
+                    .skip((page - 1) * pageSize)
+                    .limit(pageSize)
+                    .lean(),
+                models.Attendance.countDocuments({
+                    status: statusFilter,
+                    date: today,
+                    isDeleted: false
+                }),
+                models.Task.find({
+                    date: today,
+                }),
+            ]);
 
-        const attendanceMap = new Map();
-        const taskMap = new Map();
+            attendanceDocs.sort((a, b) =>
+                a.employee.fullName.localeCompare(b.employee.fullName)
+            );
 
-        attendanceDocs.forEach((a) => {
-            attendanceMap.set(a.employee.toString(), a.status);
-        });
+            const taskMap = new Map();
 
-        taskDocs.forEach((t) => {
-            taskMap.set(t.employee.toString(), {
-                description: t.description,
+            taskDocs.forEach((t) => {
+                taskMap.set(t.employee.toString(), {
+                    description: t.description,
+                });
             });
-        });
 
-        const finalList = employees
-            .map((emp) => {
-                const id = emp._id.toString();
-                const attendance = attendanceMap.get(id) || "Not Marked";
-                const task = taskMap.get(id)?.description || "";
+            data = attendanceDocs
+                .map((_docs) => {
+                    const task = taskMap.get(_docs.employee._id.toString())?.description || "";
 
-                return {
-                    ...emp._doc,
-                    attendance,
-                    task,
-                };
-            })
-            .filter((item) => (statusFilter ? item.attendance === statusFilter : true));
+                    return {
+                        ..._docs.employee,
+                        attendance: _docs?.status,
+                        task,
+                    };
+                })
+
+            console.log(totalAttendanceCount);
+            totalPages = Math.ceil(totalAttendanceCount / pageSize);
+            totalCount = totalAttendanceCount;
+        }
+        else {
+            whereClause.role = "Employee";
+            whereClause.isDeleted = false;
+            whereClause.status = { $in: ["Selected"] };
+
+            const [employees, totalEmployeeCount] = await Promise.all([
+                models.CandidateToEmployee.find(whereClause)
+                    .select("fullName email position department profilePic")
+                    .skip((page - 1) * pageSize)
+                    .limit(pageSize)
+                    .sort({ "fullName": 1 }),
+
+                models.CandidateToEmployee.countDocuments(whereClause),
+            ]);
+
+            const employeeIds = employees.map((e) => e._id);
+
+            const [attendanceDocs, taskDocs] = await Promise.all([
+                models.Attendance.find({
+                    employee: { $in: employeeIds },
+                    date: today,
+                    isDeleted: false,
+                }),
+                models.Task.find({
+                    employee: { $in: employeeIds },
+                    date: today,
+                }),
+            ]);
+
+            const attendanceMap = new Map();
+            const taskMap = new Map();
+
+            attendanceDocs.forEach((a) => {
+                attendanceMap.set(a.employee.toString(), a.status);
+            });
+
+            taskDocs.forEach((t) => {
+                taskMap.set(t.employee.toString(), {
+                    description: t.description,
+                });
+            });
+
+            data = employees
+                .map((emp) => {
+                    const id = emp._id.toString();
+                    const attendance = attendanceMap.get(id) || "Not Marked";
+                    const task = taskMap.get(id)?.description || "";
+
+                    return {
+                        ...emp._doc,
+                        attendance,
+                        task,
+                    };
+
+                });
+            totalPages = Math.ceil(totalEmployeeCount / pageSize);
+            totalCount = totalEmployeeCount;
+        }
+
+
 
         return {
             success: true,
             status: 200,
             message: "Attendance fetched successfully.",
             data: {
-                users: finalList,
+                users: data,
                 page,
                 pageSize,
                 totalPages,
@@ -119,6 +173,15 @@ const markAttendance = async (payload) => {
             createdAt: new Date(),
             updatedAt: new Date(),
         });
+
+        await models.Task.create({
+            employee: payload?.employeeId,
+            description: faker.hacker.phrase(),
+            comment : faker.lorem.sentences(3),
+            date: today,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        })
 
         return { success: true, status: 200, message: 'Attendance updated successfully', data: { _id: attendance?.employee, status: attendance?.status } };
     }

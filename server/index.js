@@ -21,9 +21,9 @@ app.use('/api/v1/employee', routes.employeeRoutes);
 app.use('/api/v1/attendance', routes.attendanceRoutes);
 app.use('/api/v1/leave', routes.leaveRoutes);
 
-app.get('/', (req, res) => {
-    res.json({ message: "Server Runs perfectly!" });
-})
+// app.get('/', (req, res) => {
+//     res.json({ message: "Server Runs perfectly!" });
+// })
 
 app.listen(PORT, () => console.log(`Server Listen on port ${PORT}`));
 dbConnect();

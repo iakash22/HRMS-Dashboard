@@ -18,28 +18,10 @@ const USER_DOESNOT_EXISTS = {
     type: "USER_DOESNOT_EXISTS",
 }
 
-const USERNAME_ALREADY_TAKEN = {
-    status,
-    message: "Username is already taken.",
-    type: "USERNAME_ALREADY_TAKEN",
-}
-
 const WRONG_PASSWORD = {
     status: 401,
     message: "Wrong Password",
     type: "WRONG_PASSWORD"
-}
-
-const INVALID_ACCESS_TOKEN = {
-    status: 401,
-    message: "Token Invalid",
-    type: "INVALID_ACCESS_TOKEN",
-}
-
-const EXPIRE_ACCESS_TOKEN = {
-    status: 422,
-    message: "Token Expired",
-    type: "EXPIRE_ACCESS_TOKEN",
 }
 
 const ACCOUNT_SOFT_DELETE = {
@@ -47,30 +29,6 @@ const ACCOUNT_SOFT_DELETE = {
     message: "Account Not Found or Temporary Deleted",
     type: "ACCOUNT_SOFT_DELETE"
 }
-
-const ACCOUNT_ALREADY_SOFT_DELETE = {
-    status: 404,
-    message: "Account Already Delete",
-    type: "ACCOUNT_ALREADY_SOFT_DELETE"
-}
-
-const BAD_REQUEST = {
-    status,
-    message: "Bad Request!",
-    type: "BAD_REQUEST",
-}
-
-const EXPIRE_OTP = {
-    status,
-    message: "Otp Expire",
-    type: "EXPIRE_OTP",
-};
-
-const INVALID_OTP = {
-    status,
-    message: "Invalid otp",
-    type: "INVALID_OTP"
-};
 
 const FIELDS_REQUIRED = {
     status,
@@ -84,77 +42,39 @@ const INVALID_USER_ID = {
     type: "INVALID_VALUE",
 }
 
-const USERNAME_NOT_FOUND = {
-    status,
-    message: "Username not found",
-    type: "USERNAME_NOT_FOUND",
+const TOKEN_EXPIRED = {
+    status: 401,
+    message: 'Session expired. Please login again.',
+    type: 'TOKEN_EXPIRED',
 };
 
-const IS_BLOCKED_USER = {
-    status,
-    message: "User Blocked",
-    type: "IS_BLOCKED_USER"
-}
-
-const EMAIL_NOT_FOUND = {
-    status,
-    message: "Email not found",
-    type: "EMAIL_NOT_FOUND",
+const INVALID_TOKEN = {
+    status: 401,
+    message: 'Invalid token. Please login again.',
+    type: 'INVALID_TOKEN',
 };
-
-const TOKEN_MISSING = {
-    status,
-    message: "Token is missing",
-    type: "TOKEN_MISSING",
-}
-
-const UNAUTHORIZED_USER = {
-    status: 404,
-    message: "UNAUTHORIZED USER, THIS IS PRIVATE ROUTE",
-    type: "UNAUTHORIZED_USER"
-}
-
-const SAME_PASSWORD_ERROR = {
-    status: 400,
-    message: "New password cannot be the same as the previous passwords.",
-    type: "SAME_PASSWORD_ERROR"
+const AUTHENTICATION_FAILED = {
+    status: 403,
+    message: 'Authentication failed.',
+    type: 'AUTHENTICATION_FAILED',
 };
-
-// Friend Request
-
-const FRIEND_REQUEST_ALREADY_SEND_OR_RECEIVE = {
-    status: 400,
-    message: "Request already recieve or send!",
-    type: "FRIEND_REQUEST_ALREADY_SEND_OR_RECEIVE"
-}
 
 const NOT_FOUND = {
     status: 404,
     message: "Not Found",
-    type : "NOT_FOUND"
-} 
+    type: "NOT_FOUND"
+}
 
 module.exports = {
     SERVER_ERROR: SERVER_ERROR,
     USER_ALREADY_EXISTS: USER_ALREADY_EXISTS,
     USER_DOESNOT_EXISTS: USER_DOESNOT_EXISTS,
     WRONG_PASSWORD: WRONG_PASSWORD,
-    INVALID_ACCESS_TOKEN: INVALID_ACCESS_TOKEN,
-    EXPIRE_ACCESS_TOKEN: EXPIRE_ACCESS_TOKEN,
     ACCOUNT_SOFT_DELETE: ACCOUNT_SOFT_DELETE,
-    ACCOUNT_ALREADY_SOFT_DELETE: ACCOUNT_ALREADY_SOFT_DELETE,
-    BAD_REQUEST: BAD_REQUEST,
-    EXPIRE_OTP: EXPIRE_OTP,
-    USERNAME_ALREADY_TAKEN: USERNAME_ALREADY_TAKEN,
-    INVALID_OTP: INVALID_OTP,
     FIELDS_REQUIRED: FIELDS_REQUIRED,
     INVALID_USER_ID: INVALID_USER_ID,
-    USERNAME_NOT_FOUND: USERNAME_NOT_FOUND,
-    EMAIL_NOT_FOUND: EMAIL_NOT_FOUND,
-    IS_BLOCKED_USER: IS_BLOCKED_USER,
-    TOKEN_MISSING: TOKEN_MISSING,
-    UNAUTHORIZED_USER: UNAUTHORIZED_USER,
-    SAME_PASSWORD_ERROR: SAME_PASSWORD_ERROR,
-    FRIEND_REQUEST_ALREADY_SEND_OR_RECEIVE: FRIEND_REQUEST_ALREADY_SEND_OR_RECEIVE,
-    NOT_FOUND : NOT_FOUND,
+    NOT_FOUND: NOT_FOUND,
+    TOKEN_EXPIRED,
+    INVALID_TOKEN,
+    AUTHENTICATION_FAILED,
 };

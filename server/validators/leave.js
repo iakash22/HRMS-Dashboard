@@ -11,7 +11,7 @@ const applyLeaveSchema = Joi.object({
 const updateLeaveStatusSchema = Joi.object({
     leaveId: Joi.string().required().custom(checkValidId('Invalid Leave Id')),
     status: Joi.string().required(),
-})
+});
 
 const queryLeaveSchema = Joi.object({
     page: Joi.number().min(1).default(1),
@@ -21,8 +21,13 @@ const queryLeaveSchema = Joi.object({
 })
 
 
+const approvedLeavesSchema = Joi.object({
+    date: Joi.string().optional(),
+});
+
 module.exports = {
     applyLeaveSchema: applyLeaveSchema,
     queryLeaveSchema : queryLeaveSchema,
-    updateLeaveStatusSchema : updateLeaveStatusSchema,
+    updateLeaveStatusSchema: updateLeaveStatusSchema,
+    approvedLeavesSchema : approvedLeavesSchema,
 }

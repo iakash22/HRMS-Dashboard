@@ -50,7 +50,7 @@ const login = async (payload) => {
         // console.log(user);
 
         if (await features.VerifyPassword(password, user.password)) {
-            const JWT_SECRET = process.env.JWT_SECRET;
+            const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
             const token = features.tokenGenerateToken({ id: user._id, email }, JWT_SECRET);
 
             const tokenGenerateAt = Date.now();

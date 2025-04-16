@@ -135,7 +135,7 @@ const updateStatus = async (payload) => {
 
 const deleteCandidate = async (payload) => {
     try {
-        const candidate = await models.CandidateToEmployee.findOne({ _id: payload.userId, role: "Candidate", isDeleted: false });
+        const candidate = await models.CandidateToEmployee.findOne({ _id: payload.candidateId, role: "Candidate", isDeleted: false });
 
         if (!candidate) {
             return errors.NOT_FOUND;

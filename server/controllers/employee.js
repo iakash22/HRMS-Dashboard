@@ -62,11 +62,15 @@ const getAndSearchEmployees = async (payload) => {
 
         if (payload?.search) {
             const searchRegex = new RegExp(payload.search, 'i');
-            whereClause.$or = [
-                { fullName: searchRegex },
-                { email: searchRegex },
-                { position: searchRegex },
-            ];
+            if (payload.onlyFullName) {
+                whereClause.fullName = searchRegex;
+            } else {
+                whereClause.$or = [
+                    { fullName: searchRegex },
+                    { email: searchRegex },
+                    { position: searchRegex },
+                ];
+            }
         }
 
         if (payload?.position) {

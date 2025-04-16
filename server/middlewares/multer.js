@@ -7,4 +7,5 @@ exports.multerUpload = multer({
 });
 
 exports.singleFile = this.multerUpload.single('resume');
+exports.singleDocs = this.multerUpload.single('docs');
 exports.attachmentsMulter = this.multerUpload.array("files", 5);

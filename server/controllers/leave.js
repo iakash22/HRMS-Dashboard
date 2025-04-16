@@ -32,9 +32,20 @@ const applyLeave = async (payload) => {
             status: "Pending",
         });
 
-        return {
-            success: true, status: 200, message: "Leave request submitted.", data: { leave, employee: attendance.employee }
-        };
+        const employee = attendance?.employee;
+
+        const modifiedData = {
+            _id: leave?._id,
+            reason: leave?.reason,
+            date: leave?.date,
+            employeeId: leave?.employee,
+            status: leave?.status,
+            docsUrl: leave?.docsUrl,
+            fullName: employee?.fullName,
+            profilePic: employee?.profilePic,
+        }
+
+        return { success: true, status: 200, message: "Leave request submitted.", data: modifiedData };
     } catch (error) {
         console.error("Error applying leave:", error);
         return errors.SERVER_ERROR;
@@ -50,6 +61,29 @@ const updateLeaveStatus = async (payload) => {
         leave.updatedAt = new Date();
         await leave.save();
 
+        if (leave?.status === "Approved") {
+            const markAttendance = await models.Attendance.findOne({
+                employee: leave.employee,
+                date: leave.date,
+                isDeleted: false,
+            });
+
+            if (!markAttendance) {
+                const leaveDate = leave?.date;
+                leaveDate.setHours(0, 0, 0, 0);
+                await models.Attendance.create({
+                    employee: leave?.employee,
+                    date: leaveDate,
+                    status: "Absent",
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                });
+            } else {
+                markAttendance.status = "Absent";
+                await markAttendance.save();
+            }
+        }
+
         return { success: true, status: 200, message: "Leave status updated.", data: leave };
     } catch (error) {
         console.error("Error updating leave status:", error);
@@ -62,8 +96,12 @@ const getAndSearchLeaves = async (payload) => {
         const page = parseInt(payload?.page) || 1;
         const pageSize = parseInt(payload?.pageSize) || 10;
 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         const whereClause = {
             isDeleted: false,
+            date: { $gte: today },
         };
 
         if (payload?.search) {
@@ -120,18 +158,40 @@ const getAndSearchLeaves = async (payload) => {
     }
 }
 
-
-const getLeaveCountsByDate = async (payload) => {
+const getLeaveCountsAndDataByDate = async (payload) => {
     try {
+        if (payload?.date) {
+            const inputDate = new Date(payload.date);
+            const startOfDay = new Date(inputDate.setHours(0, 0, 0, 0));
+            const endOfDay = new Date(inputDate.setHours(23, 59, 59, 999));
+
+            const leaves = await models.Leave.find({
+                status: 'Approved',
+                isDeleted: false,
+                date: { $gte: startOfDay, $lte: endOfDay },
+            }).select('date').populate('employee', 'fullName position department _id profilePic');
+
+            return {
+                success: true,
+                status: 200,
+                message: "Date Wise Leaves fetched successfully.",
+                data: leaves,
+            };
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         const leaves = await models.Leave.find({
             status: 'Approved',
-            isDeleted: false
+            isDeleted: false,
+            date: { $gte: today },
         }).select('date'); // only need the date field
 
         const leaveCountMap = {};
 
         leaves.forEach((leave) => {
-            const dateKey = new Date(leave.date).toISOString().split('T')[0]; // 'YYYY-MM-DD'
+            const dateKey = leave.date;
             leaveCountMap[dateKey] = (leaveCountMap[dateKey] || 0) + 1;
         });
 
@@ -140,12 +200,7 @@ const getLeaveCountsByDate = async (payload) => {
             count,
         }));
 
-        return {
-            success: true,
-            status: 200,
-            message: "Leave count by date fetched successfully.",
-            data: result,
-        };
+        return { success: true, status: 200, message: "Date Wise Leaves count fetched successfully.", data: result };
     } catch (error) {
         console.error("Error fetching leave count by date:", error);
         return errors.SERVER_ERROR;
@@ -158,5 +213,5 @@ module.exports = {
     applyLeave: applyLeave,
     updateLeaveStatus: updateLeaveStatus,
     getAndSearchLeaves: getAndSearchLeaves,
-    getLeaveCountsByDate: getLeaveCountsByDate
+    getLeaveCountsAndDataByDate: getLeaveCountsAndDataByDate
 }

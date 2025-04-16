@@ -15,11 +15,11 @@ router.use(
 );
 
 
-router.post('/edit',
-    validation.body(validators.employeeValidator.editEmployeeSchema),
+router.put('/edit',
+    // validation.body(validators.employeeValidator.editEmployeeSchema),
     async (req, res) => {
         try {
-            // console.log("resume file", req.file);
+            console.log("Req Body :", req.body);
             const data = await controllers.employeeControllers.editEmployee(req.body);
             return res.status(data.status).json(data);
         } catch (error) {
