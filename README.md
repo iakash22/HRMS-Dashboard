@@ -75,6 +75,7 @@ This README provides an overview of the project's features, architecture, setup 
 │   ├── routes/                # Express route definitions
 │   ├── utils/                 # Utility/helper functions
 │   └── validators/            # Request validators (e.g., Joi, express-validator)
+│   └── index.js               # Server implementation
 ```
 
 
