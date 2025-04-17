@@ -110,6 +110,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                 onConfirm={logoutHandler}
                 message="Are you sure you want to log out?"
                 title="Log Out"
+                cancelLabel='Cancel'
+                confirmLabel='Logout'
             />
             <button className={`sidebar-toggle ${isSidebarOpen ? "open" : "close"}`} onClick={toggleSidebar}>
             </button>

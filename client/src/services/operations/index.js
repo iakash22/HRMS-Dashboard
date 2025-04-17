@@ -23,7 +23,9 @@ const getAndSearchOpeartion = async (API_URL, query = {}, accessToken) => {
     } catch (error) {
         console.log("Error Get And Search Operation :", error);
         const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
+        if (errorMessage) {
+            toast.error(errorMessage);
+        }
         return [];
     }
 };

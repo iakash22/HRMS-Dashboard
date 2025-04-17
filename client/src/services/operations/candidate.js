@@ -3,29 +3,6 @@ import { candidateEndPoints } from '../api';
 import toast from 'react-hot-toast';
 import { getErrorMessage } from '../../utils/errorHandler';
 
-const GetAndSearchCandidate = async (query = {}, accessToken, setLoading) => {
-    try {
-        setLoading(true);
-
-        const response = await axios.get(candidateEndPoints.GET_AND_SEARCH_CANDIDATE_API, {
-            params: query,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-
-        return response.data?.data || [];
-    } catch (error) {
-        console.log("Error Get Candidate", error);
-        const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
-        return [];
-    } finally {
-        setLoading(false);
-    }
-};
-
 const updateCandidateStatus = async (data, accessToken) => {
     try {
         const response = await axios.put(candidateEndPoints.UPDATE_STATUS_API,
@@ -37,12 +14,14 @@ const updateCandidateStatus = async (data, accessToken) => {
                 }
             }
         );
-        console.log("response :", response);
+        // console.log("response :", response);
         toast.success("Status Updated");
     } catch (error) {
         console.log("Error Get Candidate", error);
         const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
+        if (errorMessage) {
+            toast.error(errorMessage);
+        }
     }
 }
 
@@ -56,11 +35,13 @@ const deleteCandidate = async (candidateId, accessToken) => {
                 }
             }
         );
-        console.log("response :", response);
+        // console.log("response :", response);
     } catch (error) {
         console.log("Error Get Candidate", error);
         const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
+        if (errorMessage) {
+            toast.error(errorMessage);
+        }
     }
 }
 
@@ -82,14 +63,15 @@ const addCandidate = async (data, accessToken) => {
         return response?.data;
     } catch (error) {
         const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
+        if (errorMessage) {
+            toast.error(errorMessage);
+        }
         throw error;
     }
 };
 
 
 export default {
-    GetAndSearchCandidate: GetAndSearchCandidate,
     updateCandidateStatus: updateCandidateStatus,
     deleteCandidate: deleteCandidate, 
     addCandidate :addCandidate,

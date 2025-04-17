@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css'; // Import the CSS file
 import Loader from '../Loader';
-import Logo from '../Logo';
+import Logo from '../../../common/Logo';
 
 const SplashScreenLoader = () => {
     return (

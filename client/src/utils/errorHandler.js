@@ -13,7 +13,7 @@ export const getErrorMessage = (error) => {
         if (status === 401 || status === 403) {
             const message = data?.message || 'Session expired. Please login again.';
             handleTokenExpiry(message);
-            return message;
+            return '';
         }
 
         if (typeof data === 'string') return data;
@@ -40,8 +40,9 @@ export const getErrorMessage = (error) => {
 };
 
 export const handleTokenExpiry = (message = "Session expired. Please login again.") => {
-    toast.error(message);
+    const toastId = toast.loading("Auto Logout..", {position : "top-center", duration : 1000});
     setTimeout(() => {
+        toast.error(message, { id: toastId, position: "top-center", duration : 1500});
         store.dispatch(logoutUser());
         window.location.href = '/login';
     }, 1000);

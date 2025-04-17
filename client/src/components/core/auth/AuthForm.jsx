@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useLocation, useNavigate } from 'react-router-dom'
 import './style.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Services from '../../../services/operations';
+import { EyeHiddenIcon, EyeOpenIcon } from '../../../assets'
 
 const AuthForm = ({ }) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -12,20 +12,21 @@ const AuthForm = ({ }) => {
     const { pathname } = useLocation();
     const disptach = useDispatch();
     const navigate = useNavigate();
+    const { loading } = useSelector(state => state.auth);
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isDirty, isValid },
         watch,
     } = useForm();
 
     const onSubmit = async (data) => {
         if (pathname === "/register") {
-            console.log("Registering user:", data);
+            // console.log("Registering user:", data);
             data.confirmPassword = undefined;
             await disptach(Services.AuthOperation.register(data, navigate));
         } else {
-            console.log("Logging in user:", data);
+            // console.log("Logging in user:", data);
             await disptach(Services.AuthOperation.login(data, navigate));
         }
     };
@@ -94,7 +95,7 @@ const AuthForm = ({ }) => {
                     <a href="#forget-password" className='authForm-link forget-link' style={{ marginTop: "-2px" }}>Forgot password?</a>
                 }
 
-                <button type="submit" className="authForm-btn">{pathname === "/register" ? "Register" : "Login"}</button>
+                <button type="submit" className="authForm-btn" disabled={loading || (pathname == "/login" && (!isValid || !isDirty))}>{pathname === "/register" ? "Register" : "Login"}</button>
 
                 <div className="authForm-link">
                     {pathname === "/register" ? <>Already have an account? <a href="/login">Login</a></>
@@ -116,7 +117,7 @@ const PasswordWithEyeVisible = ({ children, show, setShow }) => {
     return (
         <div className='password-visible'>
             {children}
-            {show ? <LuEye className='eye' onClick={passwordToggle} /> : <LuEyeOff className='eye' onClick={passwordToggle} />}
+            {show ? <EyeOpenIcon className='eye' onClick={passwordToggle} /> : <EyeHiddenIcon className='eye' onClick={passwordToggle} />}
         </div>
     )
 }

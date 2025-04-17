@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+import AppLayout from '../../AppLayout';
 
 const Loader = ({ parentExtraStyle, circleStyles}) => {
     return (
@@ -13,4 +14,4 @@ const Loader = ({ parentExtraStyle, circleStyles}) => {
     );
 };
 
-export default Loader;
+export default AppLayout(Loader);

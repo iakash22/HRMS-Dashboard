@@ -74,10 +74,10 @@ input::placeholder {
 
 .eye {
     position: absolute;
-    font-size: 18px;
+    width: 20px;
+    height: 20px;
     top: 15px;
     right: 15px;
-    border-width: 1.5px;
     color: var(--voilet-color);
     cursor: pointer;
 }
@@ -102,6 +102,15 @@ input::placeholder {
 
 .authForm-btn:hover {
     background: var(--voilet-color);
+}
+
+.authForm-btn:disabled{
+    box-shadow: none;
+}
+
+.authForm-btn:disabled {
+    background-color: var(--grey-color);
+    cursor: not-allowed;
 }
 
 .authForm-link {

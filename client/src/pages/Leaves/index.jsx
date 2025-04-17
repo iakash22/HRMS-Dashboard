@@ -89,7 +89,7 @@ const Leaves = ({ isSidebarOpen }) => {
     const closeDialog = () => setOpen(false);
 
     const createLeaveHandler = async (leaveData, setFormLoading) => {
-        console.log("LeaveData :", leaveData);
+        // console.log("LeaveData :", leaveData);
         setFormLoading(true);
         if (!leaveData && !leaveData?.employeeId) {
             toast.error("Form Error, Retry again!");

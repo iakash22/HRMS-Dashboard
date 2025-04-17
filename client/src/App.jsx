@@ -1,10 +1,10 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import { OpenRoutes, PrivateRoute } from './components/core/auth';
-import Loader from './components/common/Loader';
+import Loader from './components/layouts/Loaders/Loader';
 import { useSelector } from 'react-redux';
-import SplashScreenLoader from './components/common/SplashLoader';
+import SplashScreenLoader from './components/layouts/Loaders/SplashLoader';
 // import Pages 
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));

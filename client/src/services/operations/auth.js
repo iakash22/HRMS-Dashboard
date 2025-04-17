@@ -15,7 +15,7 @@ const register = (data, navigate) => {
                     headers: { 'Content-Type': 'application/json', }
                 }
             );
-            console.log("register response :", response);
+            // console.log("register response :", response);
             navigate('/login');
         } catch (error) {
             console.log("Register error :", error);
@@ -55,30 +55,7 @@ const login = (data, navigate) => {
     }
 }
 
-// const logout = (data, navigate) => {
-//     return async (dispatch) => {
-//         dispatch(setLoading(true));
-//         try {
-            // const response = await axios.post(
-            //     authEndPoints.LOGOUT_API,
-            //     data,
-            // );
-            // console.log("Logout response:", response);
-//             dispatch(logout());
-//             navigate('/login');
-//         } catch (error) {
-//             console.log("login error :", error);
-//             const errorMessage = getErrorMessage(error);
-//             toast.error(errorMessage);
-//         } finally {
-//             dispatch(setLoading(false));
-//         }
-//     }
-// }
-
-
 export default {
     register: register,
     login: login,
-    // logout: logout,
 }

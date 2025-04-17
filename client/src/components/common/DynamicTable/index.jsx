@@ -4,7 +4,7 @@ import CustomDropdown from '../CustomDropDown';
 import ActionMenuDots from '../ActionMenuDots';
 import { toUSFormat, formatDate } from '../../../utils/helper';
 import { DocumentIcon } from '../../../assets';
-import Loader from '../Loader';
+import Loader from '../../layouts/Loaders/Loader';
 import toast from 'react-hot-toast';
 
 function DynamicTable({ data, columns, onScrollEnd, loading, hasMore, dropDownHandler, actionsData = [], dropDownData = [] }) {

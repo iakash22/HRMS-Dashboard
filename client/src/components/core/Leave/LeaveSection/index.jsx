@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import Services from '../../../../services/operations';
 import { leaveEndPoints } from '../../../../services/api';
 import { formatDate } from '../../../../utils/helper';
-import Loader from '../../../common/Loader';
+import Loader from '../../../layouts/Loaders/Loader';
 
 const LeaveSection = ({ leaveCounts }) => {
     const [approvedLeavesData, setAppprovedLeavesData] = useState([]);

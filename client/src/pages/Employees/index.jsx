@@ -76,7 +76,7 @@ const Employees = ({isSidebarOpen}) => {
     }
 
     const deleteEmployeeHandler = async (employee) => {
-        console.log("employee ", employee);
+        // console.log("employee ", employee);
         if (!employee?._id) return;
         try {
             await Services.EmployeeOperation.deleteEmployee(employee._id, accessToken);

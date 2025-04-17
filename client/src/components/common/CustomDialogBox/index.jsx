@@ -25,7 +25,6 @@ const CustomDialogBox = ({
         setValue,
         clearErrors,
         watch,
-        getValues,
     } = useForm({
         defaultValues: {
             ...initialData,

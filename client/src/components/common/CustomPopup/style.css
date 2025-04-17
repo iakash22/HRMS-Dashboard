@@ -17,7 +17,7 @@
     overflow: hidden;
     box-shadow: 0px 4px 10px 773px #12121280;
     font-family: "Nunito", sans-serif;
-    border: 1px solid var(--grey-color)
+    /* border: 1px solid var(--grey-color) */
 }
 
 .confirm-header {
@@ -72,4 +72,21 @@
     background-color: transparent;
     color: var(--red-color);
     border: 1px solid var(--red-color);
+}
+
+
+@media (max-width : 480px) {
+    .confirm-header {
+        padding: 14px;
+        font-size: 18px;
+    }
+    .confirm-body p {
+        font-size: 14px;
+    }
+    .cancel-btn,
+    .logout-btn {
+        padding: 8px 25px;
+        font-size: 14px;
+        min-width: auto;
+    }
 }

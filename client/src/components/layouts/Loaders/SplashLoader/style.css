@@ -40,31 +40,38 @@
 
     20% {
         transform: translateY(-40px) rotate(0deg);
-        /* Jump straight up */
     }
 
     45% {
         transform: translateY(-40px) rotate(45deg);
-        /* Rotate mid-air - extended */
     }
 
     60% {
         transform: translateY(0) rotate(45deg);
-        /* Land */
     }
 
     75% {
         transform: translateY(-35px) rotate(45deg);
-        /* Jump again */
     }
 
     90% {
         transform: translateY(-35px) rotate(90deg);
-        /* Rotate more mid-air - extended */
     }
 
     100% {
         transform: translateY(0) rotate(90deg);
-        /* Land again */
+    }
+}
+
+@media (max-width : 480px) {
+    .splash-screen-loader .logo {
+        font-size: 40px;
+        gap: 20px;
+    }
+
+    .splash-screen-loader .rect-box {
+        width: 70px;
+        height: 70px;
+        border-radius: 7px;
     }
 }

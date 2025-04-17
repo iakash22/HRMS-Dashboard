@@ -21,7 +21,9 @@ const applyForLeave = async (data, accessToken) => {
         return response?.data;
     } catch (error) {
         const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
+        if (errorMessage) {
+            toast.error(errorMessage);
+        }
         throw error;
     }
 }
@@ -42,7 +44,9 @@ const updateLeaveStatus = async (data, accessToken) => {
     } catch (error) {
         console.log("Error update leave status", error);
         const errorMessage = getErrorMessage(error);
-        toast.error(errorMessage);
+        if (errorMessage) {
+            toast.error(errorMessage);
+        }
     }
 }
 

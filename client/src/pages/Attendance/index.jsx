@@ -1,17 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import AppLayout from '../../components/layouts/AppLayout'
-import './style.css';
-import CustomDropdown from '../../components/common/CustomDropDown';
-import { MdSearch } from 'react-icons/md';
-import DynamicTable from '../../components/common/DynamicTable';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Services from '../../services/operations';
-import { attendanceEndPoints } from '../../services/api';
-import { setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
-import { debounce } from '../../utils/optimizers';
-import { attendanceTableColumn } from '../../constant/tableColumnData'
-import { attendanceFilterStatus, attendanceStatus } from '../../constant/filterAndDropDownData'
+import CustomDropdown from '../../components/common/CustomDropDown';
+import DynamicTable from '../../components/common/DynamicTable';
 import SearchBar from '../../components/common/SearchBar';
+import AppLayout from '../../components/layouts/AppLayout';
+import { attendanceFilterStatus, attendanceStatus } from '../../constant/filterAndDropDownData';
+import { attendanceTableColumn } from '../../constant/tableColumnData';
+import { setData, setLoading, setPagination, updateFilter } from '../../redux/reducers/slices/table';
+import { attendanceEndPoints } from '../../services/api';
+import Services from '../../services/operations';
+import { debounce } from '../../utils/optimizers';
+import './style.css';
 
 const Attendance = ({ isSidebarOpen }) => {
     const { page, pageSize, status, search, hasMore, loading, data } = useSelector((state) => state.table.attendance);
@@ -27,7 +26,7 @@ const Attendance = ({ isSidebarOpen }) => {
             const attendance = response?.users || [];
             const totalPages = response?.totalPages || 1;
 
-            console.log(response);
+            // console.log(response);
             dispatch(setData({ pageKey: "attendance", data: attendance, append: page > 1 }));
             dispatch(setPagination({ pageKey: "attendance", page: page + 1, hasMore: page < totalPages }));
         } catch (err) {
