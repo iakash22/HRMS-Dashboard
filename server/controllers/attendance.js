@@ -4,6 +4,7 @@ const { faker } = require('@faker-js/faker');
 
 const getAndSearchAttendance = async (payload) => {
     try {
+        console.log("payload :", payload);
         const page = parseInt(payload?.page) || 1;
         const pageSize = parseInt(payload?.pageSize) || 10;
 
@@ -68,8 +69,6 @@ const getAndSearchAttendance = async (payload) => {
                         task,
                     };
                 })
-
-            console.log(totalAttendanceCount);
             totalPages = Math.ceil(totalAttendanceCount / pageSize);
             totalCount = totalAttendanceCount;
         }
@@ -154,6 +153,7 @@ const getAndSearchAttendance = async (payload) => {
 
 const markAttendance = async (payload) => {
     try {
+        console.log("payload :", payload);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 

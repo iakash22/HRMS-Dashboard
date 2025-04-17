@@ -5,7 +5,7 @@ const attendanceSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     status: {
         type: String,
-        enum: ['Present', 'Absent', 'Leave', 'Medical Leave', 'Work From Home'],
+        enum: ['Not Mark', 'Present', 'Absent', 'Leave', 'Medical Leave', 'Work From Home'],
         default: 'Present'
     },
     isDeleted: { type: Boolean, default: false },

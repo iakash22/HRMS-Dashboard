@@ -9,7 +9,7 @@ exports.verifyToken = async (req, res, next) => {
             return res.status(401).json({ message: 'Authorization header missing or invalid' });
         }
 
-        const token = authHeader.split(" ")[1]; // extract token from "Bearer <token>"
+        const token = authHeader.split(" ")[1]; 
         const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
         jwt.verify(token, JWT_SECRET, (err, decoded) => {
             if (err) {

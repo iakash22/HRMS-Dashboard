@@ -4,6 +4,7 @@ const features = require('../utils/features');
 
 const register = async (payload) => {
     try {
+        console.log("payload :", payload);
         const { fullName, password, email } = payload;
 
         const checkWithEmail = await models.User.findOne({ email });
@@ -34,9 +35,9 @@ const register = async (payload) => {
     }
 };
 
-
 const login = async (payload) => {
     try {
+        console.log("payload :", payload);
         const { email, password } = payload;
         const user = await models.User.findOne({ email })
 
@@ -71,28 +72,8 @@ const login = async (payload) => {
     }
 }
 
-const logout = async (payload) => {
-    try {
-        const userId = payload.userId;
-        const user = await models.User.findOne({ _id: userId });
-
-        if (!user) {
-            return errors.INVALID_USER_ID;
-        }
-
-        user.token = null;
-        user.tokenGenerateAt = null;
-        user.tokenExipreAt = null;
-        await user.save();
-        return { status: 200, message: "You’ve logged out" };
-    } catch (error) {
-        console.error("Error Ocurred Occurred while logout controller", error);
-        return errors.SERVER_ERROR;
-    }
-}
 
 module.exports = {
     register: register,
     login: login,
-    logout: logout,
 }

@@ -16,10 +16,10 @@ router.use(
 
 
 router.put('/edit',
-    // validation.body(validators.employeeValidator.editEmployeeSchema),
+    validation.body(validators.employeeValidator.editEmployeeSchema),
     async (req, res) => {
         try {
-            console.log("Req Body :", req.body);
+            // console.log("Req Body :", req.body);
             const data = await controllers.employeeControllers.editEmployee(req.body);
             return res.status(data.status).json(data);
         } catch (error) {

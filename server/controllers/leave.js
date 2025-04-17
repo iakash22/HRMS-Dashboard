@@ -4,6 +4,7 @@ const { uploadImageCloudinary } = require('../utils/fileUploadAndDelete');
 
 const applyLeave = async (payload) => {
     try {
+        console.log("payload :", payload);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -54,6 +55,7 @@ const applyLeave = async (payload) => {
 
 const updateLeaveStatus = async (payload) => {
     try {
+        console.log("payload :", payload);
         const leave = await models.Leave.findById(payload?.leaveId);
         if (!leave) return errors.NOT_FOUND;
 
@@ -93,6 +95,7 @@ const updateLeaveStatus = async (payload) => {
 
 const getAndSearchLeaves = async (payload) => {
     try {
+        console.log("payload :", payload);
         const page = parseInt(payload?.page) || 1;
         const pageSize = parseInt(payload?.pageSize) || 10;
 
@@ -160,6 +163,7 @@ const getAndSearchLeaves = async (payload) => {
 
 const getLeaveCountsAndDataByDate = async (payload) => {
     try {
+        console.log("payload :", payload);
         if (payload?.date) {
             const inputDate = new Date(payload.date);
             const startOfDay = new Date(inputDate.setHours(0, 0, 0, 0));

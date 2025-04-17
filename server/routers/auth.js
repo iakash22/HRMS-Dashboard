@@ -12,7 +12,7 @@ router.post(
     validator.body(validation.authValidator.registerSchema),
     async (req, res) => {
         try {
-            console.log("Req body", req.body);
+            // console.log("Req body", req.body);
             const data = await controllers.authControllers.register(req.body);
             return res.status(data.status).json(data);
         } catch (error) {
@@ -28,20 +28,6 @@ router.post(
     async (req, res) => {
         try {
             const data = await controllers.authControllers.login(req.body);
-            return res.status(data.status).json(data);
-        } catch (error) {
-            console.error("Error Ocurred Occurred while login user route", error);
-            return res.status(500).json(errors.SERVER_ERROR);
-        }
-    }
-)
-
-router.post(
-    "/logout",
-    validator.body(validation.authValidator.logoutSchema),
-    async (req, res) => {
-        try {
-            const data = await controllers.authControllers.logout(req.body);
             return res.status(data.status).json(data);
         } catch (error) {
             console.error("Error Ocurred Occurred while login user route", error);

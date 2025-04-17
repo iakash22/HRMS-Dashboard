@@ -4,6 +4,7 @@ const { uploadImageCloudinary } = require('../utils/fileUploadAndDelete');
 
 const createCandidate = async (payload) => {
     try {
+        console.log("payload :", payload);
         const { fullName, email, phone, position, experience } = payload;
 
         const resume = payload.resume;
@@ -109,6 +110,7 @@ const getAndSearchCandidates = async (payload) => {
 
 const updateStatus = async (payload) => {
     try {
+        console.log("payload :", payload);
         const candidate = await models.CandidateToEmployee.findOne({ _id: payload?.candidateId, role: "Candidate", isDeleted: false });
 
         if (!candidate) {
@@ -135,6 +137,7 @@ const updateStatus = async (payload) => {
 
 const deleteCandidate = async (payload) => {
     try {
+        console.log("payload :", payload);
         const candidate = await models.CandidateToEmployee.findOne({ _id: payload.candidateId, role: "Candidate", isDeleted: false });
 
         if (!candidate) {

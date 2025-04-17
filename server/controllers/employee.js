@@ -3,6 +3,7 @@ const models = require('../models');
 
 const editEmployee = async (payload) => {
     try {
+        console.log("payload :", payload);
         const employee = await models.CandidateToEmployee.findOne({ _id: payload?.employeeId }).select("-isDeleted -resumeUrl -status");
 
         if (!employee) {
@@ -32,6 +33,7 @@ const editEmployee = async (payload) => {
 
 const deleteEmployee = async (payload) => {
     try {
+        console.log("payload :", payload);
         const employee = await models.CandidateToEmployee.findOne({ _id: payload.employeeId, role: "Employee", isDeleted: false });
 
         if (!employee) {

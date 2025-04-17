@@ -41,7 +41,7 @@ exports.uploadImageCloudinary = async (files, folder, height, quality) => {
 exports.deleteImageCloudinary = async (publicId, fileType) => {
     try {
         const result = await cloudinary.uploader.destroy(publicId, { resource_type: fileType });
-        console.log("Cloudinary Video Delete Response:", result);
+        // console.log("Cloudinary Video Delete Response:", result);
         return { result };
     } catch (error) {
         console.error("Error deleting video from Cloudinary:", error);
