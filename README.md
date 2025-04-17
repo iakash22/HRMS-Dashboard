@@ -56,6 +56,7 @@ This README provides an overview of the project's features, architecture, setup 
 - Joi (Validation)
 
 ## Project Structure
+```
 ├── client/                    # Frontend React application
 │   ├── public/                # Public assets (favicon, index.html, etc.)
 │   └── src/                   # Source files
@@ -74,6 +75,7 @@ This README provides an overview of the project's features, architecture, setup 
 │   ├── routes/                # Express route definitions
 │   ├── utils/                 # Utility/helper functions
 │   └── validators/            # Request validators (e.g., Joi, express-validator)
+```
 
 
 ## Getting Started
