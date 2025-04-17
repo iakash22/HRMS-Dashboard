@@ -12,6 +12,7 @@ const Candidates = lazy(() => import('./pages/Candidates'));
 const Employees = lazy(() => import('./pages/Employees'));
 const Attendance = lazy(() => import('./pages/Attendance'));
 const Leaves = lazy(() => import('./pages/Leaves'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const App = () => {
   const { accessToken } = useSelector(state => state.auth);
@@ -33,6 +34,8 @@ const App = () => {
             <Route path='/attendance' element={<Attendance />} />
             <Route path='/leaves' element={<Leaves />} />
           </Route>
+
+          <Route path='/*' element={<NotFound />} />
         </Routes>
       </Suspense>
     </>
